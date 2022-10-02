@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DEV_DB_URL")
+}
+
+model User {
+  id        String        @id @default(uuid())
+  username  String        @unique
+  email     String        @unique
+  password  String
+  tokens    Token[]
+  rooms     RoomOnUsers[]
+  messages  Message[]
+  imageURL  String        @default("https://www.portmelbournefc.com.au/wp-content/uploads/2022/03/avatar-1.jpeg")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("users")
+}
+
+model Token {
+  id    Int    @id @default(autoincrement())
+  value String
+
+  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  @@map("tokens")
+}
+
+model Room {
+  id      Int           @id @default(autoincrement())
+  users   RoomOnUsers[]
+  isGroup Boolean       @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Message   Message[]
+
+  @@map("rooms")
+}
+
+model RoomOnUsers {
+  room   Room   @relation(fields: [roomId], references: [id])
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  roomId Int
+
+  @@id([userId, roomId])
+  @@map("room_on_users")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  body      String
+  isRead    Boolean  @default(false)
+  sender    User     @relation(fields: [senderId], references: [id])
+  senderId  String
+  room      Room     @relation(fields: [roomId], references: [id])
+  roomId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
+}

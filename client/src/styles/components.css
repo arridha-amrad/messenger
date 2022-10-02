@@ -1,0 +1,11 @@
+@layer components {
+  .btn {
+    @apply transition-all duration-100 ease-linear h-10 px-4 rounded-lg text-white ring-offset-2 focus:ring-2 overflow-hidden text-lg;
+  }
+  .btn-special {
+    @apply bg-gradient-to-r from-indigo-500 to-red-500 ring-indigo-500;
+  }
+  .link {
+    @apply text-blue-500 dark:text-blue-400;
+  }
+}

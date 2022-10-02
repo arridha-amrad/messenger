@@ -1,0 +1,34 @@
+@layer base {
+  html {
+    --bg: #fff;
+    --text: #000;
+    --bg-input: #fff;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+
+  html[theme-mode='dark'] {
+    --bg: #000;
+    --text: #eee;
+    --bg-input: #333;
+  }
+
+  body {
+    background-color: var(--bg);
+  }
+
+  label,
+  p,
+  div {
+    color: var(--text);
+  }
+
+  input {
+    background-color: var(--bg-input);
+  }
+
+  input[type='password'] {
+    letter-spacing: 0.3rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+}
