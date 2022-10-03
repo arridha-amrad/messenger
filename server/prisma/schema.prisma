@@ -29,8 +29,8 @@ model Token {
   id    Int    @id @default(autoincrement())
   value String
 
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String?
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 
   @@map("tokens")
 }

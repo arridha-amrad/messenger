@@ -39,6 +39,19 @@ export const removeToken = async (id: number): Promise<void> => {
   }
 };
 
+export const removeManyToken = async (userId: string): Promise<void> => {
+  try {
+    await TokenModel.deleteMany({
+      where: {
+        userId,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error('remove many token failure');
+  }
+};
+
 export const findById = async (id: string): Promise<IUserModel | null> => {
   try {
     const user = await UserModel.findFirst({
@@ -78,6 +91,22 @@ export const findToken = async (token: string): Promise<ITokenModel | null> => {
   } catch (err) {
     console.log(err);
     throw new Error('find token failure');
+  }
+};
+
+export const findTokenByUserId = async (
+  userId: string
+): Promise<ITokenModel | null> => {
+  try {
+    const user = await TokenModel.findFirst({
+      where: {
+        userId,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.log(err);
+    throw new Error('find token by user id');
   }
 };
 

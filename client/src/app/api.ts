@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getToken, setToken } from '../utils/token';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'http://localhost:3000/api/',
+  baseUrl: '/api/',
   credentials: 'include',
   prepareHeaders: (headers, _) => {
     const token = getToken();
@@ -23,12 +23,12 @@ const baseQueryWithReauth = async (
   const error = result?.error as any;
   if (error?.originalStatus === 401) {
     const refreshResult = (await baseQuery(
-      'users/refreshToken',
+      'user/refresh-token',
       api,
       extraOptions
-    )) as any;
-    if (refreshResult?.data) {
-      setToken(refreshResult.data.accToken);
+    )) as { data: { token: string } };
+    if (refreshResult.data) {
+      setToken(refreshResult.data.token);
       result = await baseQuery(args, api, extraOptions);
     } else {
       window.location.href = '/login?e=session expired';
@@ -41,5 +41,5 @@ export const api = createApi({
   reducerPath: 'api',
   tagTypes: ['User', 'Todos', 'Todo'],
   baseQuery: baseQueryWithReauth,
-  endpoints: (builder) => ({}),
+  endpoints: (_) => ({}),
 });

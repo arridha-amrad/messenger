@@ -1,17 +1,9 @@
 import { SVGProps } from 'react';
 
-export default function MySpinner(props?: SVGProps<SVGSVGElement>) {
+export default function MySpinner(props: SVGProps<SVGSVGElement>) {
   return (
-    <div
-      style={{ paddingTop: '1rem', display: 'flex', justifyContent: 'center' }}
-    >
-      <svg
-        className="text-slate-800"
-        viewBox="0 0 2400 2400"
-        width={18}
-        height={18}
-        {...props}
-      >
+    <div className="flex justify-center items-center">
+      <svg viewBox="0 0 2400 2400" width={18} height={18} {...props}>
         <g
           strokeWidth={200}
           strokeLinecap="round"

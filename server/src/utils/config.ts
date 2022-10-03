@@ -11,6 +11,7 @@ const schema = Type.Object({
   PORT: Type.Number({
     default: 5000,
   }),
+  CLIENT_ORIGIN: Type.String(),
   DEV_DB_URL: Type.String({
     default: '',
   }),

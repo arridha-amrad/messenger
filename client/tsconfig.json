@@ -20,7 +20,8 @@
       "@comps/*": ["src/components/*"],
       "@features/*": ["src/features/*"],
       "@assets/*": ["src/assets/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
   "include": ["src"],

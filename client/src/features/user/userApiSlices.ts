@@ -1,51 +1,27 @@
 import { api } from '../../app/api';
-
-export interface IUser {
-  id: string;
-  username: string;
-  email: string;
-  imageURL: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ILoginDTO {
-  identity: string;
-  password: string;
-}
-
-export interface ILoginResponse {
-  user: IUser;
-  token: string;
-}
-
-export interface IRegisterDTO {
-  email: string;
-  username: string;
-  password: string;
-}
+import { IUser, ILoginResponse, ILoginDTO, IRegisterDTO } from './user.types';
 
 export const userApiSlices = api.injectEndpoints({
   endpoints: (builder) => ({
     getUser: builder.query<IUser, void>({
-      query: () => 'users/me',
+      query: () => 'user/me',
       transformResponse: (response: { user: IUser }, meta, arg) =>
         response.user,
       providesTags: () => ['User'],
     }),
     login: builder.mutation<ILoginResponse, ILoginDTO>({
       query: (credentials: ILoginDTO) => ({
-        url: 'login',
+        url: 'user/login',
         method: 'POST',
         body: credentials,
       }),
     }),
     logout: builder.mutation<string, void>({
-      query: () => '/users/logout',
+      query: () => 'user/logout',
     }),
     register: builder.mutation<ILoginResponse, IRegisterDTO>({
       query: (credentials: IRegisterDTO) => ({
-        url: 'register',
+        url: 'user/register',
         method: 'POST',
         body: credentials,
       }),
