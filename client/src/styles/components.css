@@ -8,4 +8,83 @@
   .link {
     @apply text-blue-500 dark:text-blue-400;
   }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0 1rem;
+    list-style: none;
+  }
+  .shared {
+    position: relative; /* Setup a relative container for our psuedo elements */
+    max-width: 80%;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    line-height: 24px;
+    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+    border-radius: 25px;
+  }
+  .shared::before {
+    width: 20px;
+  }
+
+  .shared::after {
+    width: 26px;
+    background-color: var(
+      --bg-messages-container
+    ); /* All tails have the same bg cutout */
+  }
+
+  .shared:before,
+  .shared:after {
+    position: absolute;
+    bottom: 0;
+    height: 25px; /* height of our bubble "tail" - should match the border-radius above */
+    content: '';
+  }
+
+  .sent {
+    align-self: flex-end;
+    color: white;
+    background: var(--bg-bubble-sent);
+  }
+
+  .sent::before {
+    right: -7px;
+    background-color: var(--bg-bubble-sent);
+    border-bottom-left-radius: 16px 14px;
+  }
+
+  .sent::after {
+    right: -26px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .received {
+    align-self: flex-start;
+    color: theme('colors.white');
+    background: var(--bg-bubble-received);
+  }
+
+  .received::before {
+    left: -7px;
+    background-color: var(--bg-bubble-received);
+    border-bottom-right-radius: 16px 14px;
+  }
+
+  .received::after {
+    left: -26px;
+    border-bottom-right-radius: 10px;
+  }
+
+  .noTail {
+    margin-bottom: 5px;
+  }
+
+  .noTail:before,
+  .noTail:after {
+    opacity: 0;
+  }
 }

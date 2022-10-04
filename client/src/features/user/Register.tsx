@@ -1,11 +1,31 @@
 import TextInput from '@comps/TextInput';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '@assets/logo.png';
 import TailwindIcon from '@assets/tailwind-icon';
 import useForm from '@hooks/useForm';
 import AuthNavbar from '@comps/AuthNavbar';
+import { useRegisterMutation } from './userApiSlices';
+import { setToken } from '@utils/token';
+import MySpinner from '@comps/Spinner';
 
 const Register = () => {
+  const [registerUser, { isLoading }] = useRegisterMutation();
+  const navigate = useNavigate();
+
+  const register = async () => {
+    try {
+      const { token } = await registerUser({
+        email,
+        password,
+        username,
+      }).unwrap();
+      setToken(token);
+      navigate('/');
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  };
+
   const {
     onChange,
     onSubmit,
@@ -16,7 +36,7 @@ const Register = () => {
       username: '',
       password: '',
     },
-    async () => {}
+    register
   );
   return (
     <div className="flex flex-col min-h-screen">
@@ -57,7 +77,11 @@ const Register = () => {
               </div>
               <div className="flex-1">
                 <button type="submit" className="btn btn-special w-full">
-                  Register
+                  {isLoading ? (
+                    <MySpinner className="text-white" />
+                  ) : (
+                    'Register'
+                  )}
                 </button>
               </div>
             </div>

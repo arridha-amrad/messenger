@@ -12,8 +12,12 @@ export interface IVerifyTokenPayload {
   exp: number;
 }
 
-const privateKey = fs.readFileSync(path.join(process.cwd(), './private.pem'));
-const publicKey = fs.readFileSync(path.join(process.cwd(), './public.pem'));
+const privateKey = fs.readFileSync(
+  path.join(process.cwd(), './keys/private.pem')
+);
+const publicKey = fs.readFileSync(
+  path.join(process.cwd(), './keys/public.pem')
+);
 
 export const createToken = async (
   userId: string,

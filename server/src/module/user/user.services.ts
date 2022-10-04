@@ -26,6 +26,7 @@ export const findUser = async (query: string): Promise<IUserModel | null> => {
     }
     return user;
   } catch (err) {
+    console.log(err);
     throw new Error('Query user failure');
   }
 };

@@ -43,8 +43,8 @@ const register = async (
     // eslint-disable-next-line
     const { password: pwd, ...props } = user;
 
-    const authToken = await createToken(user.id, 'auth');
-    const refToken = await createToken(user.id, 'refresh');
+    const authToken = await createToken('1', 'auth');
+    const refToken = await createToken('1', 'refresh');
 
     res
       .status(201)

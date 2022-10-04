@@ -56,6 +56,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       });
     return;
   } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   } finally {
     await disconnectDB();

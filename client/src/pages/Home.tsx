@@ -21,12 +21,12 @@ const Home = () => {
     );
   }
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex overflow-hidden min-h-[calc(100vh-3rem)] rounded-lg">
+    <div className="container mx-auto sm:p-6 p-0">
+      <div className="flex overflow-hidden sm:h-[calc(100vh-3rem)] h-screen sm:rounded-lg rounded-none">
         <div className="w-14 p-4 bg-blue-500 dark:bg-slate-900 hidden items-stretch lg:block  dark:border-r-0">
           <Sidebar />
         </div>
-        <div className="flex-auto bg-gray-50 dark:bg-slate-800 w-60 lg:w-40 hidden md:block dark:border-r-0">
+        <div className="flex-auto bg-slate-100 dark:bg-slate-800 w-60 lg:w-40 hidden md:block dark:border-r-0">
           <ChatList />
         </div>
         <div className="flex-auto w-96 bg-blue-100 dark:bg-slate-700">
