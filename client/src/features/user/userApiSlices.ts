@@ -1,13 +1,23 @@
+import { ISearchUser } from '@features/chats/chat.types';
 import { api } from '../../app/api';
 import { IUser, ILoginResponse, ILoginDTO, IRegisterDTO } from './user.types';
 
 export const userApiSlices = api.injectEndpoints({
   endpoints: (builder) => ({
+    searchUser: builder.query<ISearchUser[], string>({
+      query: (query: string) => `user/search?user=${query}`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'User' as const, id })),
+              { type: 'User', id: 'LIST' },
+            ]
+          : [{ type: 'User', id: 'LIST' }],
+    }),
     getUser: builder.query<IUser, void>({
       query: () => 'user/me',
       transformResponse: (response: { user: IUser }, meta, arg) =>
         response.user,
-      providesTags: ['User'],
     }),
     login: builder.mutation<ILoginResponse, ILoginDTO>({
       query: (credentials: ILoginDTO) => ({
@@ -36,4 +46,5 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useRegisterMutation,
+  useSearchUserQuery,
 } = userApiSlices;

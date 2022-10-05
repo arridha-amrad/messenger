@@ -32,8 +32,7 @@ const baseQueryWithReauth = async (
       result = await baseQuery(args, api, extraOptions);
     } else {
       console.log('err result', refreshResult);
-
-      // window.location.href = '/login?e=session expired';
+      window.location.href = '/login?e=session expired';
     }
   }
   return result;

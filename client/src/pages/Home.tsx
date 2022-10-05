@@ -23,11 +23,11 @@ const Home = () => {
     );
   }
   return (
-    <div className="lg:max-w-[1400px] mx-auto sm:p-6 p-0">
+    <div className="lg:max-w-[1200px] mx-auto lg:p-6 p-0">
       {/* <div className="absolute text-sm top-0 bg-black z-30">
         {JSON.stringify(data)}
       </div> */}
-      <div className="flex overflow-hidden z-0 sm:h-[calc(100vh-3rem)] h-screen sm:rounded-lg rounded-none">
+      <div className="flex overflow-hidden z-0 lg:h-[calc(100vh-3rem)] h-screen sm:rounded-lg rounded-none">
         <div className="w-14 p-4 bg-blue-500 dark:bg-slate-900 hidden items-stretch lg:block  dark:border-r-0">
           <Sidebar />
         </div>

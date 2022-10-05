@@ -1,8 +1,8 @@
 import LogoutIcon from '@assets/LogoutIcon';
 import { useLogoutMutation } from '@features/user/userApiSlices';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LogoutDialog from './LogoutDialog';
 import Modal from './Modal';
 
 const LogoutButton = () => {
@@ -29,30 +29,11 @@ const LogoutButton = () => {
       </button>
 
       <Modal onClose={() => setIsOpen(false)} isOpen={isOpen}>
-        <div className="min-w-[300px] min-h-[250px] dark:bg-slate-800 bg-white rounded-lg flex items-center flex-col gap-3 p-2">
-          <div className="mt-4">
-            <h1 className="text-3xl font-bold dark:text-slate-300 text-slate-800">
-              Logout
-            </h1>
-          </div>
-          <div className="flex-1">
-            <p className="text-slate-400">Are you sure you want to logout ?</p>
-          </div>
-          <div className="flex flex-col my-3 gap-2 ">
-            <button
-              className="btn hover:text-slate-600 border-none text-slate-800 dark:text-slate-200"
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn rounded-lg bg-blue-500 hover:bg-blue-400"
-              onClick={handleLogout}
-            >
-              Yes
-            </button>
-          </div>
-        </div>
+        <LogoutDialog
+          isOpen={isOpen}
+          closeModal={() => setIsOpen(false)}
+          logout={handleLogout}
+        />
       </Modal>
     </>
   );
