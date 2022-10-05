@@ -112,7 +112,8 @@ export const findTokenByUserId = async (
 };
 
 export const searchUser = async (
-  query: string
+  query: string,
+  id: string
 ): Promise<
   Array<{ id: string; username: string; email: string; imageURL: string }>
 > => {
@@ -125,9 +126,24 @@ export const searchUser = async (
         imageURL: true,
       },
       where: {
-        username: {
-          contains: query,
-          mode: 'insensitive',
+        OR: [
+          {
+            username: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+          {
+            email: {
+              contains: query,
+              mode: 'insensitive',
+            },
+          },
+        ],
+        AND: {
+          NOT: {
+            id,
+          },
         },
       },
     });

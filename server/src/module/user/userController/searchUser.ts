@@ -4,8 +4,9 @@ import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response): Promise<void> => {
   const { user } = req.query;
+  const userId = req.app.locals.userId;
   try {
-    const users = await searchUser(user as string);
+    const users = await searchUser(user as string, userId ?? '');
     res.status(200).json(users);
     return;
   } catch (err) {
