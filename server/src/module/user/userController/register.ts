@@ -1,7 +1,7 @@
 import { hash } from 'argon2';
 import { NextFunction, Request, Response } from 'express';
 
-import { findUser, save } from '@user-module/user.services';
+import { findUser, save, saveToken } from '@user-module/user.services';
 import { validateRegistration } from '@user-module/user.validator';
 import { setCookieOptions } from '@utils/cookies';
 import { disconnectDB } from '@utils/db';
@@ -43,8 +43,10 @@ const register = async (
     // eslint-disable-next-line
     const { password: pwd, ...props } = user;
 
-    const authToken = await createToken('1', 'auth');
-    const refToken = await createToken('1', 'refresh');
+    const authToken = await createToken(user.id, 'auth');
+    const refToken = await createToken(user.id, 'refresh');
+
+    await saveToken(refToken, user.id);
 
     res
       .status(201)

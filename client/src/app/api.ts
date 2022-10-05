@@ -31,7 +31,9 @@ const baseQueryWithReauth = async (
       setToken(refreshResult.data.token);
       result = await baseQuery(args, api, extraOptions);
     } else {
-      window.location.href = '/login?e=session expired';
+      console.log('err result', refreshResult);
+
+      // window.location.href = '/login?e=session expired';
     }
   }
   return result;
@@ -39,7 +41,7 @@ const baseQueryWithReauth = async (
 
 export const api = createApi({
   reducerPath: 'api',
-  tagTypes: ['User', 'Todos', 'Todo'],
+  tagTypes: ['User'],
   baseQuery: baseQueryWithReauth,
   endpoints: (_) => ({}),
 });

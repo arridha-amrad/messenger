@@ -7,7 +7,7 @@ export const userApiSlices = api.injectEndpoints({
       query: () => 'user/me',
       transformResponse: (response: { user: IUser }, meta, arg) =>
         response.user,
-      providesTags: () => ['User'],
+      providesTags: ['User'],
     }),
     login: builder.mutation<ILoginResponse, ILoginDTO>({
       query: (credentials: ILoginDTO) => ({
@@ -15,6 +15,7 @@ export const userApiSlices = api.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['User'],
     }),
     logout: builder.mutation<string, void>({
       query: () => 'user/logout',
@@ -25,6 +26,7 @@ export const userApiSlices = api.injectEndpoints({
         method: 'POST',
         body: credentials,
       }),
+      invalidatesTags: ['User'],
     }),
   }),
 });

@@ -19,7 +19,7 @@ const messages = [
 
 const Messages = () => {
   return (
-    <div className="md:p-4 h-full p-2 relative flex flex-col">
+    <div className="md:p-4 h-full p-2 relative overflow-x-hidden flex flex-col">
       <button className="absolute md:hidden top-[5%] left-4 -translate-y-1/2">
         <MenuIcon />
       </button>

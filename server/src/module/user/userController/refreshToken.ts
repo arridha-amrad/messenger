@@ -50,6 +50,7 @@ export default async (req: Request, res: Response): Promise<void> => {
       .json({ token: `Bearer ${newAuthToken}` });
     return;
   } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   } finally {
     await disconnectDB();

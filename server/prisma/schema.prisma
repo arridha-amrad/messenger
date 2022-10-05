@@ -37,6 +37,7 @@ model Token {
 
 model Room {
   id      Int           @id @default(autoincrement())
+  code    String        @unique
   users   RoomOnUsers[]
   isGroup Boolean       @default(false)
 

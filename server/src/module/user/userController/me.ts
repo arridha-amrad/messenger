@@ -4,7 +4,6 @@ import { findById } from '@user-module/user.services';
 
 const me = async (req: Request, res: Response): Promise<void> => {
   const userId = req.app.locals.userId;
-
   if (typeof userId !== 'string') {
     res.sendStatus(401);
     return;
