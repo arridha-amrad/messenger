@@ -1,19 +1,28 @@
 import SearchIcon from '@assets/SearchIcon';
+import { ISearchUser } from '@features/chats/chat.types';
+import { addNewChat } from '@features/chats/chatReducer';
+import { IUser } from '@features/user/user.types';
 import { useSearchUserQuery } from '@features/user/userApiSlices';
 import { Fragment, useState } from 'react';
+import { useAppDispatch } from '../app/hooks';
 import MySpinner from './Spinner';
 
 const StartChat = () => {
-  const result = 'helloworld'.split('');
-
   const [query, setQuery] = useState('');
 
   const { data, isLoading, isSuccess } = useSearchUserQuery(query, {
     skip: query === '',
   });
 
+  const dispatch = useAppDispatch();
+
+  const chooseUser = (user: ISearchUser) => {
+    console.log('user : ', user);
+    dispatch(addNewChat(user));
+  };
+
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col p-4">
       <div className="relative flex items-center w-[450px]">
         <div className="absolute left-1 rounded-lg h-10 w-10 flex items-center justify-center text-gray-400">
           <SearchIcon />
@@ -30,7 +39,10 @@ const StartChat = () => {
         <div className="max-h-[300px] overflow-auto mt-4 space-y-3 ">
           {data?.map((r, i) => (
             <Fragment key={i}>
-              <div className="flex gap-4 items-center hover:bg-blue-300 hover:text-white dark:hover:bg-indigo-500 p-2 rounded-lg cursor-pointer">
+              <div
+                onClick={() => chooseUser(r)}
+                className="flex gap-4 items-center hover:bg-blue-300 hover:text-white dark:hover:bg-indigo-500 p-2 rounded-lg cursor-pointer"
+              >
                 <img
                   src={r.imageURL}
                   alt=""

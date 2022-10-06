@@ -19,8 +19,9 @@ const LogoutButton = () => {
   return (
     <>
       <button
+        autoFocus={false}
         onClick={() => setIsOpen(true)}
-        className="text-white cursor-pointer group relative"
+        className="text-white cursor-pointer group relative outline-none"
       >
         <LogoutIcon />
         <p className="p-1 absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in -top-9 -left-3 text-sm rounded-lg shadow bg-slate-300 dark:bg-indigo-500">
@@ -28,7 +29,7 @@ const LogoutButton = () => {
         </p>
       </button>
 
-      <Modal onClose={() => setIsOpen(false)} isOpen={isOpen}>
+      <Modal variant="shock" onClose={() => setIsOpen(false)} isOpen={isOpen}>
         <LogoutDialog
           isOpen={isOpen}
           closeModal={() => setIsOpen(false)}

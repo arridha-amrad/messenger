@@ -6,7 +6,7 @@ interface IProps {
 
 const LogoutDialog = ({ closeModal, logout }: IProps) => {
   return (
-    <div className="min-w-[200px] min-h-[200px] rounded-lg flex items-center flex-col gap-3">
+    <div className="min-w-[200px] min-h-[200px] rounded-lg flex items-center flex-col gap-3 p-4">
       <div className="mt-4">
         <h1 className="text-3xl font-bold dark:text-slate-300 text-slate-800">
           Logout

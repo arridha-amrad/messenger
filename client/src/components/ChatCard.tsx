@@ -12,8 +12,8 @@ const ChatCard = () => {
           Hello World asdhas dasjkdhajs djasdhajs jashdjasdha
         </p>
       </div>
-      <div className="self-start pt-2 pr-2">
-        <p className="text-gray-400 dark:text-gray-100">12.15PM</p>
+      <div className="self-start pt-3 pr-2">
+        <p className="text-slate-400 text-sm dark:text-gray-100">12.15PM</p>
       </div>
     </div>
   );
