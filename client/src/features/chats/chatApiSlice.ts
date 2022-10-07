@@ -15,10 +15,10 @@ export const chatApiSlice = api.injectEndpoints({
     }),
     sendMessage: builder.mutation<
       ISendMessageResponse,
-      ISendMessageRequestBody
+      ISendMessageRequestBody & { roomId?: string }
     >({
-      query: (data: ISendMessageRequestBody) => ({
-        url: 'chat/send',
+      query: (data: ISendMessageRequestBody, roomId?: string) => ({
+        url: `chat/send?roomId=${roomId}`,
         method: 'POST',
         body: data,
       }),

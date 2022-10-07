@@ -8,7 +8,7 @@ const ChatCard = ({ chat }: { chat: IRoom }) => {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
-  }).format(new Date(chat.message?.createdAt ?? ''));
+  }).format(chat.message ? new Date(chat.message.createdAt) : new Date());
 
   return (
     <div

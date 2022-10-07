@@ -19,7 +19,7 @@ export const chatSlice = createSlice({
   reducers: {
     addNewChat: (state, action: PayloadAction<IUserChat>) => {
       const data: IRoom = {
-        users: [action.payload],
+        user: action.payload,
       };
       state.chats.splice(0, 0, data);
     },

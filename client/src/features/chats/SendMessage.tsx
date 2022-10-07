@@ -1,7 +1,6 @@
 import { useAppSelector } from '@app/hooks';
 import MySpinner from '@comps/Spinner';
 import useForm from '@hooks/useForm';
-import { useSearchParams } from 'react-router-dom';
 import { useSendMessageMutation } from './chatApiSlice';
 
 const SendMessage = () => {
@@ -12,6 +11,7 @@ const SendMessage = () => {
   const handleSendMessage = async () => {
     try {
       const result = await send({
+        roomId: selectedRoom?.id,
         body: text,
         toId: selectedRoom!.user.id,
       }).unwrap();
