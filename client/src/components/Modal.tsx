@@ -31,7 +31,7 @@ const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
         <>
           <div
             onClick={onClose}
-            className="fixed dark:bg-black bg-slate-700 opacity-80 inset-0"
+            className="fixed dark:bg-black z-[99] bg-slate-700 opacity-80 inset-0"
           />
           <motion.div
             key={isOpen ? 1 : 0}
@@ -39,7 +39,7 @@ const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="dark:bg-slate-800 bg-white rounded-lg fixed"
+            className="dark:bg-slate-800 bg-white rounded-lg fixed m-1 z-[100]"
           >
             {children}
           </motion.div>

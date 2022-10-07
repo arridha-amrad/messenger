@@ -8,12 +8,15 @@ const ChatListHeader = forwardRef(
   (props: any, ref: LegacyRef<HTMLButtonElement>) => {
     {
       const [isOpen, setIsOpen] = useState(false);
+      const closeModal = () => setIsOpen(false);
+      const openModal = () => setIsOpen(true);
+
       return (
         <div {...props} className="flex justify-between items-center h-16 ">
           <h1 className="font-semibold text-4xl subpixel-antialiased">Chats</h1>
           <button
             ref={ref}
-            onClick={() => setIsOpen(true)}
+            onClick={openModal}
             className="group relative overflow-visible"
           >
             <Pen />
@@ -21,12 +24,8 @@ const ChatListHeader = forwardRef(
               start new chat
             </p>
           </button>
-          <Modal
-            variant="dropIn"
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-          >
-            <StartChat />
+          <Modal variant="dropIn" isOpen={isOpen} onClose={closeModal}>
+            <StartChat onClose={closeModal} />
           </Modal>
         </div>
       );

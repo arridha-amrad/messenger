@@ -52,3 +52,79 @@ export const findRoomById = async (id: number): Promise<IRoomModel | null> => {
     throw new Error('find room by id error');
   }
 };
+
+export const findRooms = async (userId: string): Promise<any> => {
+  try {
+    const rooms = await RoomModel.findMany({
+      include: {
+        users: {
+          select: {
+            user: {
+              select: {
+                imageURL: true,
+                username: true,
+              },
+            },
+          },
+          where: {
+            userId: {
+              not: userId,
+            },
+          },
+        },
+        messages: {
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 1,
+        },
+      },
+      where: {
+        users: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+    return rooms;
+  } catch (err) {
+    console.log(err);
+    throw new Error('find Rooms error');
+  }
+};
+
+// const rooms = await RoomModel.findMany({
+//   include: {
+//     users: {
+//       select: {
+//         user: {
+//           select: {
+//             imageURL: true,
+//             username: true,
+//             email: true,
+//             id: true,
+//           },
+//         },
+//       },
+//       where: {
+//         userId: {
+//           not: userId,
+//         },
+//       },
+//     },
+//     messages: {
+//       orderBy: {
+//         createdAt: 'desc',
+//       },
+//       take: 1,
+//     },
+//   },
+//   where: {
+//     users: {
+//       some: {
+//         userId,
+//       },
+//     },
+//   },
+// });

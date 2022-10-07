@@ -29,7 +29,7 @@ model Token {
   id    Int    @id @default(autoincrement())
   value String
 
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   @@map("tokens")
@@ -37,20 +37,19 @@ model Token {
 
 model Room {
   id      Int           @id @default(autoincrement())
-  code    String        @unique
   users   RoomOnUsers[]
   isGroup Boolean       @default(false)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Message   Message[]
+  messages  Message[]
 
   @@map("rooms")
 }
 
 model RoomOnUsers {
   room   Room   @relation(fields: [roomId], references: [id])
-  User   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
   roomId Int
 

@@ -25,8 +25,6 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {}, [isSuccess]);
-
   const {
     onChange,
     onSubmit,
@@ -45,15 +43,18 @@ const Login = () => {
       <div className="flex items-center justify-center flex-1">
         <div className="flex flex-col gap-2 p-8 relative">
           <img src={Logo} className="mx-auto w-14 h-14" />
-          <h1 className="mb-6 text-4xl text-center dark:text-slate-100">
-            Login to Messenger
+          <h1 className="mb-6 sm:text-4xl text-3xl  text-center dark:text-slate-100">
+            Messenger
           </h1>
           {isError && (
             <p className="text-red-500 text-center absolute top-[35%] left-1/2 -translate-x-1/2">
               {error}
             </p>
           )}
-          <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-4 w-96">
+          <form
+            onSubmit={onSubmit}
+            className="flex flex-col gap-4 mt-4 md:min-w-[370px] min-w-[300px]"
+          >
             <TextInput
               name="identity"
               value={identity}

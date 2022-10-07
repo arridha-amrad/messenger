@@ -9,7 +9,7 @@ const TextInput: FC<
       <input
         {...props}
         autoComplete="off"
-        className="outline-none transition-all duration-200 ease-in px-3 h-10 border-gray-300 border-[1px] rounded-lg  focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 focus:border-indigo-500 dark:focus:ring-offset-0 dark:border-none"
+        className="outline-none transition-all duration-200 ease-in px-3 h-10 border-gray-300 border-[1px] rounded-lg w-full focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 focus:border-indigo-500 dark:focus:ring-offset-0 dark:border-none"
       />
     </div>
   );

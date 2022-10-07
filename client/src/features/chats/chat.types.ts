@@ -1,15 +1,40 @@
-export interface ISearchUser {
-  id: string;
-  username: string;
-  email: string;
-  imageURL: string;
+export interface IMessage {
+  id: number;
+  isRead: boolean;
+  body: string;
+  createdAt: Date;
+  roomId: string;
+  senderId: string;
+  updatedAt: Date;
 }
 
-export interface IChat {
+export interface IUserChat {
+  id: string;
   imageURL: string;
   username: string;
-  time?: Date;
-  message?: string;
+  email: string;
+}
+
+export interface IRoom {
+  user: IUserChat;
+  message?: IMessage;
   id?: string;
-  isRead?: string;
+  isGroup?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface ISendMessageResponse {
+  id: number;
+  body: string;
+  isRead: boolean;
+  senderId: string;
+  roomId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ISendMessageRequestBody {
+  body: string;
+  toId: string;
 }

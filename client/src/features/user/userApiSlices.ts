@@ -1,10 +1,10 @@
-import { ISearchUser } from '@features/chats/chat.types';
+import { IUserChat } from '@features/chats/chat.types';
 import { api } from '../../app/api';
 import { IUser, ILoginResponse, ILoginDTO, IRegisterDTO } from './user.types';
 
 export const userApiSlices = api.injectEndpoints({
   endpoints: (builder) => ({
-    searchUser: builder.query<ISearchUser[], string>({
+    searchUser: builder.query<IUserChat[], string>({
       query: (query: string) => `user/search?user=${query}`,
       providesTags: (result) =>
         result

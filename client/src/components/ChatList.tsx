@@ -2,13 +2,27 @@ import ChatIcon from '@assets/ChatIcon';
 
 import SearchChats from './SearchChats';
 import ChatCard from './ChatCard';
-import { Fragment, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ChatListHeader from './ChatListHeader';
-import { useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { useSearchParams } from 'react-router-dom';
+import { selectRoom, setChats } from '@features/chats/chatReducer';
+import { useGetRoomsQuery } from '@features/chats/chatApiSlice';
 
 const ChatList = () => {
+  const dispatch = useAppDispatch();
+
   const { chats } = useAppSelector((state) => state.chat);
+  const { data, isFetching } = useGetRoomsQuery();
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      dispatch(setChats(data));
+    }
+  }, [data]);
+
   const btnRef = useRef<HTMLButtonElement | null>(null);
+  const [_, setParam] = useSearchParams();
   return (
     <div className="p-4 flex flex-col h-full">
       <ChatListHeader ref={btnRef} />
@@ -32,10 +46,15 @@ const ChatList = () => {
         </div>
       )}
       <div className="mt-2 overflow-auto">
-        {chats.map((_, i) => (
-          <Fragment key={i}>
-            <ChatCard />
-          </Fragment>
+        {chats.map((chat, i) => (
+          <div
+            onClick={() => {
+              dispatch(selectRoom(chat));
+            }}
+            key={i}
+          >
+            <ChatCard chat={chat} />
+          </div>
         ))}
       </div>
     </div>

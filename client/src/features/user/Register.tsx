@@ -44,8 +44,8 @@ const Register = () => {
       <div className="flex items-center justify-center flex-1">
         <div className="flex flex-col gap-2 p-8 rounded-md">
           <img src={Logo} className="mx-auto w-14 h-14" />
-          <h1 className="mb-6 text-4xl text-center dark:text-slate-100">
-            Register to Messenger
+          <h1 className="mb-6 sm:text-4xl text-3xl text-center dark:text-slate-100">
+            Messenger
           </h1>
           <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-4 w-96">
             <TextInput
@@ -71,7 +71,7 @@ const Register = () => {
             />
             <div className="flex items-center justify-between mt-2">
               <div className="flex-1">
-                <Link to="/" className="link underline underline-offset-2">
+                <Link to="/login" className="link underline underline-offset-2">
                   login
                 </Link>
               </div>

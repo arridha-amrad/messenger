@@ -21,6 +21,7 @@ export default defineConfig({
       '@assets/': new URL('./src/assets/', import.meta.url).pathname,
       '@hooks/': new URL('./src/hooks/', import.meta.url).pathname,
       '@utils/': new URL('./src/utils/', import.meta.url).pathname,
+      '@app/': new URL('./src/app/', import.meta.url).pathname,
     },
   },
 });
