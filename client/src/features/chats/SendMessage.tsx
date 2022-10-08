@@ -1,22 +1,35 @@
-import { useAppSelector } from '@app/hooks';
-import MySpinner from '@comps/Spinner';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { RootState } from '@app/store';
+import MySpinner from '@comps/Shared/Spinner';
 import useForm from '@hooks/useForm';
-import { useSearchParams } from 'react-router-dom';
+
 import { useSendMessageMutation } from './chatApiSlice';
+import { chatReducers } from './chatReducer';
 
 const SendMessage = () => {
-  const { selectedRoom } = useAppSelector((state) => state.chat);
+  const { selectedRoom } = useAppSelector((state: RootState) => state.chat);
 
   const [send, { isLoading }] = useSendMessageMutation();
+  const dispatch = useAppDispatch();
 
   const handleSendMessage = async () => {
     try {
-      const result = await send({
-        body: text,
-        toId: selectedRoom!.user.id,
-      }).unwrap();
-
-      console.log('result : ', result);
+      if (selectedRoom !== null) {
+        const result = await send({
+          roomId: selectedRoom.id?.toString(),
+          body: text,
+          toId: selectedRoom.user.id,
+        }).unwrap();
+        if (!selectedRoom.id) {
+          dispatch(
+            chatReducers.selectRoom({
+              ...selectedRoom,
+              id: result.roomId,
+            })
+          );
+          dispatch(chatReducers.updateOneRoom(result));
+        }
+      }
     } catch (err) {
       console.log(err);
     }
@@ -34,13 +47,13 @@ const SendMessage = () => {
   );
 
   return (
-    <form className="w-full relative px-3" onSubmit={onSubmit}>
+    <form className="relative w-full px-3" onSubmit={onSubmit}>
       <textarea
         onChange={onChange}
         name="text"
         value={text}
         placeholder="Your message..."
-        className="outline-none leading-4 resize-none transition-all duration-200 ease-in border border-transparent h-20 py-2 rounded-lg  focus:ring-blue-200 dark:focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 dark:focus:border-indigo-500 focus:border-blue-500 dark:focus:ring-offset-0 w-full pl-4 pr-28"
+        className="w-full h-20 py-2 pl-4 leading-4 transition-all duration-200 ease-in border border-transparent rounded-lg outline-none resize-none focus:ring-blue-200 dark:focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 dark:focus:border-indigo-500 focus:border-blue-500 dark:focus:ring-offset-0 pr-28"
       />
       <button
         disabled={text === ''}

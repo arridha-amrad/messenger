@@ -1,9 +1,10 @@
-import LogoutIcon from '@assets/LogoutIcon';
-import { useLogoutMutation } from '@features/user/userApiSlices';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LogoutDialog from './LogoutDialog';
-import Modal from './Modal';
+
+import LogoutIcon from '@assets/LogoutIcon';
+import LogoutDialog from '@comps/Shared/LogoutDialog';
+import Modal from '@comps/Shared/Modal';
+import { useLogoutMutation } from '@features/user/userApiSlices';
 
 const LogoutButton = () => {
   const [logout, { isLoading }] = useLogoutMutation();
@@ -21,10 +22,10 @@ const LogoutButton = () => {
       <button
         autoFocus={false}
         onClick={() => setIsOpen(true)}
-        className="text-white cursor-pointer group relative outline-none"
+        className="relative text-white outline-none cursor-pointer group"
       >
         <LogoutIcon />
-        <p className="p-1 absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in -top-9 -left-3 text-sm rounded-lg shadow bg-slate-300 dark:bg-indigo-500">
+        <p className="absolute p-1 text-sm transition-opacity duration-200 ease-in rounded-lg shadow opacity-0 group-hover:opacity-100 -top-9 -left-3 bg-slate-300 dark:bg-indigo-500">
           Logout
         </p>
       </button>

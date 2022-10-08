@@ -17,13 +17,13 @@ const LogoutDialog = ({ closeModal, logout }: IProps) => {
       </div>
       <div className="flex flex-col my-3 gap-2 ">
         <button
-          className="btn hover:text-slate-600 border-none text-slate-800 dark:text-slate-200"
+          className="border-none btn hover:text-slate-600 text-slate-800 dark:text-slate-200"
           onClick={closeModal}
         >
           Cancel
         </button>
         <button
-          className="btn rounded-lg bg-blue-500 hover:bg-blue-400"
+          className="bg-blue-500 rounded-lg btn hover:bg-blue-400"
           onClick={logout}
         >
           Yes

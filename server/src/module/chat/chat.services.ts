@@ -1,6 +1,22 @@
 import { MessageModel, RoomModel } from './chat.model';
 import { IMessageModel, IRoomModel } from './chat.types';
 
+export const findMessages = async (
+  roomId: number
+): Promise<IMessageModel[]> => {
+  try {
+    const messages = await MessageModel.findMany({
+      where: {
+        roomId,
+      },
+    });
+    return messages;
+  } catch (err) {
+    console.log(err);
+    throw new Error('find messages failure');
+  }
+};
+
 export const createRoom = async (users: string[]): Promise<IRoomModel> => {
   try {
     const newRoom = await RoomModel.create({
@@ -53,9 +69,21 @@ export const findRoomById = async (id: number): Promise<IRoomModel | null> => {
   }
 };
 
-export const findRooms = async (userId: string): Promise<any> => {
+export const findRooms = async (
+  userId: string
+): Promise<
+  Array<
+    IRoomModel & {
+      users: Array<{
+        user: { id: string; imageURL: string; username: string; email: string };
+      }>;
+      messages: IMessageModel[];
+    }
+  >
+> => {
   try {
     const rooms = await RoomModel.findMany({
+      orderBy: {},
       include: {
         users: {
           select: {
@@ -63,6 +91,8 @@ export const findRooms = async (userId: string): Promise<any> => {
               select: {
                 imageURL: true,
                 username: true,
+                id: true,
+                email: true,
               },
             },
           },
@@ -93,38 +123,3 @@ export const findRooms = async (userId: string): Promise<any> => {
     throw new Error('find Rooms error');
   }
 };
-
-// const rooms = await RoomModel.findMany({
-//   include: {
-//     users: {
-//       select: {
-//         user: {
-//           select: {
-//             imageURL: true,
-//             username: true,
-//             email: true,
-//             id: true,
-//           },
-//         },
-//       },
-//       where: {
-//         userId: {
-//           not: userId,
-//         },
-//       },
-//     },
-//     messages: {
-//       orderBy: {
-//         createdAt: 'desc',
-//       },
-//       take: 1,
-//     },
-//   },
-//   where: {
-//     users: {
-//       some: {
-//         userId,
-//       },
-//     },
-//   },
-// });

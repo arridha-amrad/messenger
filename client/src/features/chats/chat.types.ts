@@ -3,7 +3,7 @@ export interface IMessage {
   isRead: boolean;
   body: string;
   createdAt: Date;
-  roomId: string;
+  roomId: number;
   senderId: string;
   updatedAt: Date;
 }
@@ -18,20 +18,10 @@ export interface IUserChat {
 export interface IRoom {
   user: IUserChat;
   message?: IMessage;
-  id?: string;
+  id?: number;
   isGroup?: string;
   createdAt?: Date;
   updatedAt?: Date;
-}
-
-export interface ISendMessageResponse {
-  id: number;
-  body: string;
-  isRead: boolean;
-  senderId: string;
-  roomId: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 export interface ISendMessageRequestBody {

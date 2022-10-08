@@ -1,6 +1,7 @@
+import { Request, Response } from 'express';
+
 import { findRooms } from '@chat-module/chat.services';
 import { disconnectDB } from '@utils/db';
-import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response): Promise<void> => {
   const userId = req.app.locals.userId;
@@ -13,11 +14,16 @@ export default async (req: Request, res: Response): Promise<void> => {
       delete room.users;
       delete room.messages;
     }
+    rooms.sort((a: any, b: any) => {
+      return (
+        new Date(b.message.createdAt).getTime() -
+        new Date(a.message.createdAt).getTime()
+      );
+    });
     res.status(200).json({ rooms });
     return;
   } catch (err) {
     console.log(err);
-
     res.sendStatus(500);
   } finally {
     await disconnectDB();

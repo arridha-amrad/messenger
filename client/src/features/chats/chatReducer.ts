@@ -1,15 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
+
+import { IMessage, IRoom, IUserChat } from './chat.types';
+
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
-import { IRoom, IUserChat } from './chat.types';
-
-interface CounterState {
-  chats: IRoom[];
+interface ChatState {
+  rooms: IRoom[];
   selectedRoom: IRoom | null;
 }
 
-const initialState: CounterState = {
-  chats: [],
+const initialState: ChatState = {
+  rooms: [],
   selectedRoom: null,
 };
 
@@ -19,20 +20,27 @@ export const chatSlice = createSlice({
   reducers: {
     addNewChat: (state, action: PayloadAction<IUserChat>) => {
       const data: IRoom = {
-        users: [action.payload],
+        user: action.payload,
       };
-      state.chats.splice(0, 0, data);
+      state.rooms.splice(0, 0, data);
     },
     setChats: (state, action: PayloadAction<IRoom[]>) => {
-      state.chats = action.payload;
+      state.rooms = action.payload;
     },
     selectRoom: (state, action: PayloadAction<IRoom>) => {
       state.selectedRoom = action.payload;
     },
+    // it will run when user send mesage without room id (room's first message)
+    updateOneRoom: (state, action: PayloadAction<IMessage>) => {
+      const index = state.rooms.findIndex(
+        (room) => room.user.id === state.selectedRoom?.user.id
+      );
+      state.rooms[index].message = action.payload;
+    },
   },
 });
 
-export const { addNewChat, selectRoom, setChats } = chatSlice.actions;
+export const chatReducers = chatSlice.actions;
 
 export const chatState = (state: RootState) => state.chat;
 

@@ -1,10 +1,11 @@
+import ThemeButton from '@comps/Shared/ThemeButton';
+
 import LogoutButton from './LogoutButton';
-import ThemeButton from './ThemeButton';
 import UserInfo from './UserInfo';
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col items-center text-white h-full justify-between">
+    <div className="flex flex-col items-center justify-between h-full text-white">
       <UserInfo />
       <ThemeButton />
       <div className="space-y-4">

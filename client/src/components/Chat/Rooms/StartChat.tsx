@@ -1,12 +1,13 @@
-import SearchIcon from '@assets/SearchIcon';
-import { ISearchUser } from '@features/chats/chat.types';
-import { addNewChat } from '@features/chats/chatReducer';
-import { useSearchUserQuery } from '@features/user/userApiSlices';
 import { AnimatePresence, motion, Variants } from 'framer-motion';
 import { Fragment, useState } from 'react';
-import { useAppDispatch } from '../app/hooks';
-import MySpinner from './Spinner';
 import useMeasure from 'react-use-measure';
+
+import { useAppDispatch } from '@app/hooks';
+import SearchIcon from '@assets/SearchIcon';
+import MySpinner from '@comps/Shared/Spinner';
+import { IUserChat } from '@features/chats/chat.types';
+import { chatReducers } from '@features/chats/chatReducer';
+import { useSearchUserQuery } from '@features/user/userApiSlices';
 
 interface IProps {
   onClose: VoidFunction;
@@ -20,10 +21,9 @@ const StartChat = ({ onClose }: IProps) => {
 
   const dispatch = useAppDispatch();
 
-  const chooseUser = (user: ISearchUser) => {
-    dispatch(addNewChat(user));
+  const chooseUser = (user: IUserChat) => {
+    dispatch(chatReducers.addNewChat(user));
     onClose();
-    console.log('user : ', user);
   };
 
   return (
@@ -40,7 +40,7 @@ const StartChat = ({ onClose }: IProps) => {
             </motion.div>
           )}
         </AnimatePresence>
-        <div className="absolute left-1 rounded-lg h-10 w-10 flex items-center justify-center text-gray-400">
+        <div className="absolute flex items-center justify-center w-10 h-10 text-gray-400 rounded-lg left-1">
           <SearchIcon />
         </div>
         <input
@@ -61,18 +61,18 @@ const StartChat = ({ onClose }: IProps) => {
           className="space-y-3 "
         >
           {data?.length === 0 ? (
-            <p className="text-center mt-4">User not found</p>
+            <p className="mt-4 text-center">User not found</p>
           ) : (
             data?.map((user, i) => (
               <Fragment key={i}>
                 <div
                   onClick={() => chooseUser(user)}
-                  className="flex gap-4 items-center hover:bg-blue-300 hover:text-white dark:hover:bg-indigo-500 p-2 rounded-lg cursor-pointer"
+                  className="flex items-center gap-4 p-2 rounded-lg cursor-pointer hover:bg-blue-300 hover:text-white dark:hover:bg-indigo-500"
                 >
                   <img
                     src={user.imageURL}
                     alt=""
-                    className="rounded-full w-10 h-10 border"
+                    className="w-10 h-10 border rounded-full"
                   />
                   <div>
                     <h1>{user.username}</h1>
@@ -92,7 +92,7 @@ const variants = {
   initial: ({ height }) => ({
     height,
   }),
-  animate: ({ data }: { data: ISearchUser[] | undefined }) => ({
+  animate: ({ data }: { data: IUserChat[] | undefined }) => ({
     height: data ? data.length * 80 : 0,
     transition: { duration: 1, velocity: 10 },
   }),

@@ -1,6 +1,7 @@
-import Pen from '@assets/Pen';
 import { forwardRef, LegacyRef, useState } from 'react';
-import Modal from './Modal';
+
+import Pen from '@assets/Pen';
+import Modal from '@comps/Shared/Modal';
 
 import StartChat from './StartChat';
 
@@ -12,15 +13,15 @@ const ChatListHeader = forwardRef(
       const openModal = () => setIsOpen(true);
 
       return (
-        <div {...props} className="flex justify-between items-center h-16 ">
-          <h1 className="font-semibold text-4xl subpixel-antialiased">Chats</h1>
+        <div {...props} className="flex items-center justify-between h-16 ">
+          <h1 className="text-4xl subpixel-antialiased font-semibold">Chats</h1>
           <button
             ref={ref}
             onClick={openModal}
-            className="group relative overflow-visible"
+            className="relative overflow-visible group"
           >
             <Pen />
-            <p className="opacity-0 dark:bg-indigo-500 py-1 px-2 transition-opacity duration-200 ease-linear bg-gray-300 shadow absolute -left-11 whitespace-nowrap group-hover:opacity-100 z-10 rounded-lg top-9 before:absolute before:w-3 before:h-3 before:rotate-45 before:-top-1 before:left-12 before:bg-gray-300 before:dark:bg-indigo-500 text-sm">
+            <p className="absolute z-10 px-2 py-1 text-sm transition-opacity duration-200 ease-linear bg-gray-300 rounded-lg shadow opacity-0 dark:bg-indigo-500 -left-11 whitespace-nowrap group-hover:opacity-100 top-9 before:absolute before:w-3 before:h-3 before:rotate-45 before:-top-1 before:left-12 before:bg-gray-300 before:dark:bg-indigo-500">
               start new chat
             </p>
           </button>

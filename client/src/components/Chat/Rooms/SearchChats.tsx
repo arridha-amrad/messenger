@@ -2,8 +2,8 @@ import SearchIcon from '@assets/SearchIcon';
 
 const SearchChats = () => {
   return (
-    <div className="mb-6 mt-4 relative flex items-center">
-      <div className="absolute left-1 rounded-lg h-10 w-10 flex items-center justify-center text-gray-400">
+    <div className="relative flex items-center mt-4 mb-6">
+      <div className="absolute flex items-center justify-center w-10 h-10 text-gray-400 rounded-lg left-1">
         <SearchIcon />
       </div>
       <input

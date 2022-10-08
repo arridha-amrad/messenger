@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 import {
   createRoom,
   findRoomById,
@@ -5,15 +7,14 @@ import {
 } from '@chat-module/chat.services';
 import { IRoomModel } from '@chat-module/chat.types';
 import { disconnectDB } from '@utils/db';
-import { Request, Response } from 'express';
 
-const sendMessage = async (req: Request, res: Response): Promise<void> => {
+export default async (req: Request, res: Response): Promise<void> => {
   const { body, toId } = req.body;
   const { roomId } = req.query;
   const fromId = req.app.locals.userId;
   try {
     let room: IRoomModel;
-    if (typeof roomId === 'undefined') {
+    if (roomId === 'undefined') {
       room = await createRoom([fromId, toId]);
     } else {
       const savedRoom = await findRoomById(parseInt(roomId as string));
@@ -35,5 +36,3 @@ const sendMessage = async (req: Request, res: Response): Promise<void> => {
     await disconnectDB();
   }
 };
-
-export default sendMessage;

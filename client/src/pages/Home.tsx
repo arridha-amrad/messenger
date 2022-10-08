@@ -1,10 +1,11 @@
-import ChatList from '@comps/ChatList';
-import Messages from '@comps/Messages';
-import Sidebar from '@comps/Sidebar';
-import MySpinner from '@comps/Spinner';
-import { useGetUserQuery } from '@features/user/userApiSlices';
 import { useEffect } from 'react';
 import { redirect } from 'react-router-dom';
+
+import Messages from '@comps/Chat/Messages/Messages';
+import ChatList from '@comps/Chat/Rooms/ChatList';
+import Sidebar from '@comps/Chat/Sidebar/Sidebar';
+import MySpinner from '@comps/Shared/Spinner';
+import { useGetUserQuery } from '@features/user/userApiSlices';
 
 const Home = () => {
   const { isLoading, data } = useGetUserQuery();
@@ -17,24 +18,21 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen w-screen">
+      <div className="flex items-center justify-center w-screen h-screen">
         <MySpinner />
       </div>
     );
   }
   return (
     <div className="lg:max-w-[1200px] mx-auto lg:p-6 p-0">
-      {/* <div className="absolute text-sm top-0 bg-black z-30">
-        {JSON.stringify(data)}
-      </div> */}
       <div className="flex overflow-hidden z-0 lg:h-[calc(100vh-3rem)] h-screen sm:rounded-lg rounded-none">
-        <div className="w-14 p-4 bg-blue-500 dark:bg-slate-900 hidden items-stretch lg:block  dark:border-r-0">
+        <div className="items-stretch hidden p-4 bg-blue-500 w-14 dark:bg-slate-900 lg:block dark:border-r-0">
           <Sidebar />
         </div>
-        <div className="flex-auto bg-slate-100 dark:bg-slate-800 w-60 lg:w-40 hidden md:block dark:border-r-0">
+        <div className="flex-auto hidden bg-slate-100 dark:bg-slate-800 w-60 lg:w-40 md:block dark:border-r-0">
           <ChatList />
         </div>
-        <div className="flex-auto w-96 bg-blue-100 dark:bg-slate-700 overflow-auto">
+        <div className="flex-auto overflow-auto bg-blue-100 w-96 dark:bg-slate-700">
           <Messages />
         </div>
       </div>

@@ -1,17 +1,18 @@
-import TextInput from '@comps/TextInput';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import Logo from '@assets/logo.png';
 import TailwindIcon from '@assets/tailwind-icon';
+import MySpinner from '@comps/Shared/Spinner';
+import TextInput from '@comps/Shared/TextInput';
+import AuthNavbar from '@comps/User/AuthNavbar';
 import useForm from '@hooks/useForm';
-import AuthNavbar from '@comps/AuthNavbar';
-import { useLoginMutation } from './userApiSlices';
-import MySpinner from '@comps/Spinner';
-import { useState } from 'react';
 import { setToken } from '@utils/token';
-import { useEffect } from 'react';
+
+import { useLoginMutation } from './userApiSlices';
 
 const Login = () => {
-  const [loginUser, { isLoading, isError, isSuccess }] = useLoginMutation();
+  const [loginUser, { isLoading, isError }] = useLoginMutation();
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -41,9 +42,9 @@ const Login = () => {
     <div className="flex flex-col min-h-screen gap-6">
       <AuthNavbar />
       <div className="flex items-center justify-center flex-1">
-        <div className="flex flex-col gap-2 p-8 relative">
+        <div className="relative flex flex-col gap-2 p-8">
           <img src={Logo} className="mx-auto w-14 h-14" />
-          <h1 className="mb-6 sm:text-4xl text-3xl  text-center dark:text-slate-100">
+          <h1 className="mb-6 text-3xl text-center sm:text-4xl dark:text-slate-100">
             Messenger
           </h1>
           {isError && (
@@ -73,13 +74,13 @@ const Login = () => {
               <div className="flex-1">
                 <Link
                   to="/register"
-                  className="link underline underline-offset-2"
+                  className="underline link underline-offset-2"
                 >
                   register
                 </Link>
               </div>
               <div className="flex-1">
-                <button type="submit" className="btn btn-special w-full">
+                <button type="submit" className="w-full btn btn-special">
                   {isLoading ? <MySpinner className="text-white" /> : 'Login'}
                 </button>
               </div>
@@ -87,8 +88,8 @@ const Login = () => {
           </form>
         </div>
       </div>
-      <div className="py-6 shadow-inner border-t-1 flex justify-center items-center">
-        <div className="text-center inline mr-2">
+      <div className="flex items-center justify-center py-6 shadow-inner border-t-1">
+        <div className="inline mr-2 text-center">
           Crafted by : <span className="font-bold">arridha amrad</span> with
         </div>
         <TailwindIcon />

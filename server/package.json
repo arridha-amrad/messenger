@@ -54,6 +54,9 @@
     "morgan": "^1.10.0",
     "prisma": "^4.4.0"
   },
+  "prisma": {
+    "seed": "ts-node src/utils/db.seeders.ts"
+  },
   "lint-staged": {
     "*.ts": "eslint --cache --max-warnings=0",
     "*.{ts, css, md}": "prettier --write"

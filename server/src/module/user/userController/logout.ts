@@ -1,6 +1,8 @@
-import { removeToken, findToken } from './../user.services';
-import { disconnectDB } from '@utils/db';
 import { Request, Response } from 'express';
+
+import { disconnectDB } from '@utils/db';
+
+import { findToken, removeToken } from '../user.services';
 
 export default async (req: Request, res: Response): Promise<void> => {
   const bearerToken = req.cookies.token as string | undefined;
@@ -8,7 +10,6 @@ export default async (req: Request, res: Response): Promise<void> => {
     if (typeof bearerToken === 'string') {
       const token = bearerToken.split(' ')[1];
       const storedToken = await findToken(token);
-      console.log('stored token : ', storedToken);
 
       if (storedToken !== null) {
         await removeToken(storedToken.id);
