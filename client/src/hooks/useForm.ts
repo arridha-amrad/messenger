@@ -14,6 +14,7 @@ const useForm = <T>(initialState: T, execute: () => Promise<void>) => {
   };
   return {
     state,
+    setState,
     onChange,
     onSubmit,
   };

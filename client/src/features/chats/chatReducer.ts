@@ -31,7 +31,7 @@ export const chatSlice = createSlice({
       state.selectedRoom = action.payload;
     },
     // it will run when user send mesage without room id (room's first message)
-    updateOneRoom: (state, action: PayloadAction<IMessage>) => {
+    updateRoomMessage: (state, action: PayloadAction<IMessage>) => {
       const index = state.rooms.findIndex(
         (room) => room.user.id === state.selectedRoom?.user.id
       );

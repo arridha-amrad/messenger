@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import ChatIcon from '@assets/ChatIcon';
 import { useGetRoomsQuery } from '@features/chats/chatApiSlice';
@@ -8,15 +7,17 @@ import { chatReducers } from '@features/chats/chatReducer';
 import ChatCard from './ChatCard';
 import ChatListHeader from './ChatListHeader';
 import SearchChats from './SearchChats';
+import { RootState } from '@app/store';
 
 const ChatList = () => {
   const dispatch = useAppDispatch();
-  const { rooms } = useAppSelector((state) => state.chat);
+  const { rooms } = useAppSelector((state: RootState) => state.chat);
   const { data } = useGetRoomsQuery();
 
   useEffect(() => {
     if (data) {
       dispatch(chatReducers.setChats(data));
+      console.log('rooms : ', data);
     }
   }, [data]);
 
@@ -44,7 +45,7 @@ const ChatList = () => {
           </button>
         </div>
       )}
-      <div className="mt-2 overflow-auto">
+      <div className="mt-2 space-y-1 overflow-auto">
         {rooms.map((room, i) => (
           <div
             onClick={() => {

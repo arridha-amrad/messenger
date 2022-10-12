@@ -20,6 +20,8 @@ const SendMessage = () => {
           body: text,
           toId: selectedRoom.user.id,
         }).unwrap();
+        console.log('send mesage result : ', result);
+
         if (!selectedRoom.id) {
           dispatch(
             chatReducers.selectRoom({
@@ -27,9 +29,10 @@ const SendMessage = () => {
               id: result.roomId,
             })
           );
-          dispatch(chatReducers.updateOneRoom(result));
         }
+        dispatch(chatReducers.updateRoomMessage(result));
       }
+      setState({ text: '' });
     } catch (err) {
       console.log(err);
     }
@@ -39,6 +42,7 @@ const SendMessage = () => {
     onChange,
     onSubmit,
     state: { text },
+    setState,
   } = useForm(
     {
       text: '',
@@ -47,13 +51,13 @@ const SendMessage = () => {
   );
 
   return (
-    <form className="relative w-full px-3" onSubmit={onSubmit}>
+    <form className="relative w-full px-3 h-[80px] mb-2" onSubmit={onSubmit}>
       <textarea
         onChange={onChange}
         name="text"
         value={text}
         placeholder="Your message..."
-        className="w-full h-20 py-2 pl-4 leading-4 transition-all duration-200 ease-in border border-transparent rounded-lg outline-none resize-none focus:ring-blue-200 dark:focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 dark:focus:border-indigo-500 focus:border-blue-500 dark:focus:ring-offset-0 pr-28"
+        className="w-full h-full py-2 pl-4 leading-4 transition-all duration-200 ease-in border border-transparent rounded-lg outline-none resize-none focus:ring-blue-200 dark:focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 dark:focus:border-indigo-500 focus:border-blue-500 dark:focus:ring-offset-0 pr-28"
       />
       <button
         disabled={text === ''}

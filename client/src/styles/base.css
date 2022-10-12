@@ -18,7 +18,7 @@
     --bg-messages-container: #334155;
     --bg-bubble-sent: #6366f1;
     --bg-bubble-received: #0f172a;
-    --bg-scrollbar: theme('colors.gray.700');
+    --bg-scrollbar: theme('colors.slate.800');
   }
 
   body {
@@ -40,16 +40,5 @@
     letter-spacing: 0.3rem;
     font-size: 1.1rem;
     font-weight: bold;
-  }
-
-  ::-webkit-scrollbar {
-    width: 15px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border: 4px solid rgba(0, 0, 0, 0);
-    background-clip: padding-box;
-    border-radius: 15px;
-    background-color: var(--bg-scrollbar);
   }
 }

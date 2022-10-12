@@ -1,8 +1,13 @@
 import { useAppSelector } from '@app/hooks';
+import { RootState } from '@app/store';
+import SeenIcon from '@assets/SeenIcon';
+import UnSeenIcon from '@assets/UnSeen';
 import { IRoom } from '@features/chats/chat.types';
+import { useGetUserQuery } from '@features/user/userApiSlices';
 
 const ChatCard = ({ chat }: { chat: IRoom }) => {
-  const { selectedRoom } = useAppSelector((state) => state.chat);
+  const { selectedRoom } = useAppSelector((state: RootState) => state.chat);
+  const { data } = useGetUserQuery();
 
   const time = new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
@@ -12,11 +17,11 @@ const ChatCard = ({ chat }: { chat: IRoom }) => {
 
   return (
     <div
-      className={`flex gap-4 cursor-pointer ${
+      className={`flex gap-4 cursor-pointer items-center hover:bg-blue-100 dark:hover:bg-indigo-700 py-1 px-2 rounded-lg ${
         selectedRoom && selectedRoom?.user.id === chat.user.id
-          ? 'bg-indigo-600'
+          ? 'dark:bg-indigo-700 bg-blue-100'
           : 'bg-transparent'
-      } items-center hover:bg-blue-100 dark:hover:bg-indigo-700 py-1 px-2 rounded-lg`}
+      } `}
     >
       <img
         src={chat.user.imageURL}
@@ -29,8 +34,25 @@ const ChatCard = ({ chat }: { chat: IRoom }) => {
           {chat.message?.body}
         </p>
       </div>
-      <div className="self-start pt-1 pr-2">
-        <p className="text-sm text-slate-400 dark:text-gray-100">{time}</p>
+      <div className="flex flex-col w-18">
+        <p className="self-start text-sm text-slate-400 dark:text-gray-100 text-end">
+          {time}
+        </p>
+        {chat.message?.senderId !== data?.id && (
+          <p className="px-[5px] bg-red-500 rounded text-white w-fit mr-0 text-sm self-center">
+            {!chat.sum || chat.sum == 0 ? '' : chat.sum}
+          </p>
+        )}
+        {chat.message?.senderId === data?.id &&
+          (chat.message?.isRead ? (
+            <div className="self-center p-1 text-gray-600 dark:text-gray-400">
+              <SeenIcon />
+            </div>
+          ) : (
+            <div className="self-center p-1 text-gray-600 dark:text-gray-400">
+              <UnSeenIcon />
+            </div>
+          ))}
       </div>
     </div>
   );

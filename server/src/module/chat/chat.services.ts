@@ -1,6 +1,44 @@
 import { MessageModel, RoomModel } from './chat.model';
 import { IMessageModel, IRoomModel } from './chat.types';
 
+export const findReceiverUnreadMessages = async (
+  roomId: number,
+  senderId: string
+): Promise<IMessageModel[]> => {
+  try {
+    const messages = await MessageModel.findMany({
+      where: {
+        roomId,
+        isRead: false,
+        senderId: {
+          not: senderId,
+        },
+      },
+    });
+    return messages;
+  } catch (err) {
+    console.log(err);
+    throw new Error('find unread message failure');
+  }
+};
+
+export const updateMessagesRead = async (
+  roomId: number,
+  userId: string
+): Promise<void> => {
+  try {
+    await MessageModel.updateMany({
+      data: {
+        isRead: true,
+      },
+      where: { roomId, senderId: { not: userId } },
+    });
+  } catch (err) {
+    console.log(err);
+    throw new Error('update message read failure');
+  }
+};
+
 export const findMessages = async (
   roomId: number
 ): Promise<IMessageModel[]> => {
@@ -8,6 +46,9 @@ export const findMessages = async (
     const messages = await MessageModel.findMany({
       where: {
         roomId,
+      },
+      orderBy: {
+        id: 'asc',
       },
     });
     return messages;

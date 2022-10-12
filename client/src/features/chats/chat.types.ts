@@ -19,6 +19,7 @@ export interface IRoom {
   user: IUserChat;
   message?: IMessage;
   id?: number;
+  sum?: number;
   isGroup?: string;
   createdAt?: Date;
   updatedAt?: Date;
