@@ -44,12 +44,12 @@ const Register = () => {
     <div className="flex flex-col min-h-screen">
       <AuthNavbar />
       <div className="flex items-center justify-center flex-1">
-        <div className="flex flex-col gap-2 p-8 rounded-md">
+        <div className="flex flex-col p-8 gap-2 rounded-md">
           <img src={Logo} className="mx-auto w-14 h-14" />
           <h1 className="mb-6 text-3xl text-center sm:text-4xl dark:text-slate-100">
             Messenger
           </h1>
-          <form onSubmit={onSubmit} className="flex flex-col gap-4 mt-4 w-96">
+          <form onSubmit={onSubmit} className="flex flex-col mt-4 gap-4 w-96">
             <TextInput
               name="email"
               value={email}

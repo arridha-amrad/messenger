@@ -1,29 +1,45 @@
-import { useAppSelector } from '@app/hooks';
-import { RootState } from '@app/store';
 import MySpinner from '@comps/Shared/Spinner';
-import { useGetMessagesQuery } from '@features/chats/chatApiSlice';
+import {
+  useGetMessagesQuery,
+  useGetRoomsQuery,
+} from '@features/chats/chatApiSlice';
 import SendMessage from '@features/chats/SendMessage';
 import { useGetUserQuery } from '@features/user/userApiSlices';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import RoomHeader from './MessageHeader';
 
 const Messages = () => {
-  const { selectedRoom } = useAppSelector((state: RootState) => state.chat);
   const { data: user } = useGetUserQuery();
+
+  const [param] = useSearchParams();
+
+  const { data: rooms } = useGetRoomsQuery(undefined, { skip: !user });
+
+  const roomId = param.get('room');
+  const userId = param.get('user');
+
+  // we only show the message_composer when user is in room list
+  const [isRoomValid, setIsRoomValid] = useState(false);
+
+  useEffect(() => {
+    const currRoom = rooms?.find((r) => r.user.id === userId);
+    if (currRoom) {
+      setIsRoomValid(true);
+    } else {
+      setIsRoomValid(false);
+    }
+  }, [userId, rooms]);
 
   const {
     data: messages,
     isLoading,
     isFetching,
-    isSuccess,
-  } = useGetMessagesQuery(
-    selectedRoom?.id ? selectedRoom.id.toString() : undefined,
-    {
-      skip: !selectedRoom?.id,
-    }
-  );
+  } = useGetMessagesQuery(roomId ?? undefined, {
+    skip: !roomId,
+  });
 
   const messagesContainerRef = useRef<HTMLUListElement | null>(null);
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
@@ -38,13 +54,13 @@ const Messages = () => {
   }, [messages?.length]);
 
   return (
-    <div className="relative flex flex-col h-full pl-2 pr-1 overflow-hidden">
-      {selectedRoom && (
+    <div className="relative flex flex-col h-full overflow-hidden">
+      {isRoomValid && (
         <>
           <RoomHeader />
           <div
             ref={outerContainerRef}
-            className="relative flex-1 my-6 overflow-x-hidden overflow-y-auto md:my-2"
+            className="relative flex-1 pr-2 mt-2 mr-1 overflow-x-hidden overflow-y-auto app-scrollbar"
           >
             <AnimatedSpinner condition={isLoading || isFetching} />
             <ul ref={messagesContainerRef} className="list">

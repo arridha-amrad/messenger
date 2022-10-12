@@ -39,7 +39,7 @@ const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="dark:bg-slate-800 bg-white rounded-lg fixed m-1 z-[100]"
+            className="dark:bg-slate-800 bg-white rounded-lg w-fit fixed m-1 z-[100]"
           >
             {children}
           </motion.div>

@@ -25,7 +25,7 @@ const LogoutButton = () => {
         className="relative text-white outline-none cursor-pointer group"
       >
         <LogoutIcon />
-        <p className="absolute p-1 text-sm transition-opacity duration-200 ease-in rounded-lg shadow opacity-0 group-hover:opacity-100 -top-9 -left-3 bg-slate-300 dark:bg-indigo-500">
+        <p className="absolute p-1 text-sm rounded-lg shadow opacity-0 transition-opacity duration-200 ease-in group-hover:opacity-100 -top-9 -left-3 bg-slate-300 dark:bg-indigo-500">
           Logout
         </p>
       </button>

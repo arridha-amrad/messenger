@@ -21,7 +21,7 @@ const ChatListHeader = forwardRef(
             className="relative overflow-visible group"
           >
             <Pen />
-            <p className="absolute z-10 px-2 py-1 text-sm transition-opacity duration-200 ease-linear bg-gray-300 rounded-lg shadow opacity-0 dark:bg-indigo-500 -left-11 whitespace-nowrap group-hover:opacity-100 top-9 before:absolute before:w-3 before:h-3 before:rotate-45 before:-top-1 before:left-12 before:bg-gray-300 before:dark:bg-indigo-500">
+            <p className="absolute z-10 px-2 py-1 text-sm bg-gray-300 rounded-lg shadow opacity-0 transition-opacity duration-200 ease-linear dark:bg-indigo-500 -left-11 whitespace-nowrap group-hover:opacity-100 top-9 before:absolute before:w-3 before:h-3 before:rotate-45 before:-top-1 before:left-12 before:bg-gray-300 before:dark:bg-indigo-500">
               start new chat
             </p>
           </button>

@@ -1,6 +1,9 @@
 @layer components {
+  .app-scrollbar {
+    @apply scrollbar-thin scrollbar-track-rounded-lg dark:scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg scrollbar-thumb-gray-400 scrollbar-track-gray-300 dark:scrollbar-track-gray-400 scroll-p-5;
+  }
   .btn {
-    @apply transition-all duration-100 ease-linear h-10 px-4 rounded-lg text-white ring-offset-2 focus:ring-2 overflow-hidden text-lg;
+    @apply h-10 px-4 overflow-hidden text-lg text-white transition-all duration-100 ease-linear rounded-lg ring-offset-2 focus:ring-2;
   }
   .btn-special {
     @apply bg-gradient-to-r from-indigo-500 to-red-500 ring-indigo-500;

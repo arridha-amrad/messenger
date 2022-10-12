@@ -5,9 +5,10 @@ import useMeasure from 'react-use-measure';
 import { useAppDispatch } from '@app/hooks';
 import SearchIcon from '@assets/SearchIcon';
 import MySpinner from '@comps/Shared/Spinner';
-import { IUserChat } from '@features/chats/chat.types';
-import { chatReducers } from '@features/chats/chatReducer';
+import { IRoom, IUserChat } from '@features/chats/chat.types';
 import { useSearchUserQuery } from '@features/user/userApiSlices';
+import { chatApiSlice, useGetRoomsQuery } from '@features/chats/chatApiSlice';
+import { useSearchParams } from 'react-router-dom';
 
 interface IProps {
   onClose: VoidFunction;
@@ -16,30 +17,52 @@ interface IProps {
 const StartChat = ({ onClose }: IProps) => {
   const [query, setQuery] = useState('');
   const [ref, { height }] = useMeasure();
+  const { data: rooms } = useGetRoomsQuery();
 
-  const { data, isFetching } = useSearchUserQuery(query);
+  const { data, isFetching, isLoading } = useSearchUserQuery(query, {
+    skip: query === '',
+  });
 
   const dispatch = useAppDispatch();
 
+  const [_, setParam] = useSearchParams();
+
   const chooseUser = (user: IUserChat) => {
-    dispatch(chatReducers.addNewChat(user));
+    const currRoom = rooms?.find((room) => room.user.id === user.id);
+    if (currRoom) {
+      setParam({
+        user: user.id,
+        room: currRoom.id ? currRoom.id.toString() : 'undefined',
+      });
+    } else {
+      setParam({
+        user: user.id,
+        room: 'undefined',
+      });
+      dispatch(
+        chatApiSlice.util.updateQueryData(
+          'getRooms',
+          undefined,
+          (draft: IRoom[]) => {
+            const newRoom: IRoom = {
+              user,
+            };
+            draft.splice(0, 0, newRoom);
+          }
+        )
+      );
+    }
+
     onClose();
   };
 
   return (
-    <div className="flex flex-col p-4">
-      <div className="relative flex items-center max-w-[450px]">
-        <AnimatePresence mode="wait">
-          {isFetching && (
-            <motion.div
-              key={data?.length}
-              exit={{ opacity: 0, transition: { duration: 0.5, delay: 0.3 } }}
-              className="absolute right-2"
-            >
-              <MySpinner />
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <div className="flex flex-col md:p-4 p-2 overflow-x-hidden sm:w-[450px] w-full">
+      <div className="relative flex items-center">
+        <LoadingQueryIndicator
+          condition={isFetching || isLoading}
+          motionKey={data?.length}
+        />
         <div className="absolute flex items-center justify-center w-10 h-10 text-gray-400 rounded-lg left-1">
           <SearchIcon />
         </div>
@@ -47,11 +70,14 @@ const StartChat = ({ onClose }: IProps) => {
           onChange={(e) => setQuery(e.target.value)}
           autoFocus
           placeholder="search user"
-          className="outline-none w-[400px] pl-12 border-transparent transition-all duration-200 ease-in px-3 h-10 border-gray-300 border-[1px] rounded-lg  focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 focus:border-indigo-500 dark:focus:ring-offset-0 dark:border-none"
+          className="outline-none w-full pl-12 border-transparent transition-all duration-200 ease-in px-3 h-10 border-gray-300 border-[1px] rounded-lg  focus:ring-indigo-200 focus:ring-2 focus:ring-offset-2 focus:border-indigo-500 dark:focus:ring-offset-0 dark:border-none"
         />
       </div>
 
-      <div ref={ref} className="min-h-[100px] max-h-[400px] overflow-auto mt-4">
+      <div
+        ref={ref}
+        className="min-h-[100px] max-h-[400px] overflow-y-auto overflow-x-hidden mt-4 app-scrollbar"
+      >
         <motion.div
           key={data?.length}
           initial="initial"
@@ -85,6 +111,28 @@ const StartChat = ({ onClose }: IProps) => {
         </motion.div>
       </div>
     </div>
+  );
+};
+
+const LoadingQueryIndicator = ({
+  condition,
+  motionKey,
+}: {
+  condition: boolean;
+  motionKey?: number;
+}) => {
+  return (
+    <AnimatePresence mode="wait">
+      {condition && (
+        <motion.div
+          key={motionKey}
+          exit={{ opacity: 0, transition: { duration: 0.5, delay: 0.3 } }}
+          className="absolute right-2"
+        >
+          <MySpinner />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

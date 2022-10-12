@@ -25,13 +25,26 @@ export const chatApiSlice = api.injectEndpoints({
       }),
       async onQueryStarted(reqBody, { dispatch, queryFulfilled }) {
         try {
-          const { data } = await queryFulfilled;
-          const patchResult = dispatch(
+          const { data: body } = await queryFulfilled;
+          dispatch(
             chatApiSlice.util.updateQueryData(
               'getMessages',
               reqBody.roomId,
               (draft: IMessage[]) => {
-                draft.push(data);
+                draft.push(body);
+              }
+            )
+          );
+          dispatch(
+            chatApiSlice.util.updateQueryData(
+              'getRooms',
+              undefined,
+              (draft: IRoom[]) => {
+                const room = draft.find((d) => d.user.id === reqBody.toId);
+                if (room) {
+                  room.message = body;
+                  room.id = body.roomId;
+                }
               }
             )
           );

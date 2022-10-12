@@ -42,7 +42,7 @@ const Login = () => {
     <div className="flex flex-col min-h-screen gap-6">
       <AuthNavbar />
       <div className="flex items-center justify-center flex-1">
-        <div className="relative flex flex-col gap-2 p-8">
+        <div className="relative flex flex-col p-8 gap-2">
           <img src={Logo} className="mx-auto w-14 h-14" />
           <h1 className="mb-6 text-3xl text-center sm:text-4xl dark:text-slate-100">
             Messenger

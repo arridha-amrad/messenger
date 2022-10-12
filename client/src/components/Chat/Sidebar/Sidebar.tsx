@@ -5,7 +5,7 @@ import UserInfo from './UserInfo';
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col items-center justify-between h-full text-white">
+    <div className="flex flex-col items-center justify-between h-full p-4 text-white bg-blue-500 w-14 dark:bg-slate-700">
       <UserInfo />
       <ThemeButton />
       <div className="space-y-4">
