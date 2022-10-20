@@ -1,15 +1,21 @@
 import { createServer } from './app';
 import { config } from './utils/config';
 import { connectToDB } from './utils/db';
+import { createServer as serverInit } from 'http';
+import { initSocket } from './module/socket/socket';
 
 const port = config.PORT;
 
 const startServer = async (): Promise<void> => {
   const app = createServer();
 
+  const httpServer = serverInit(app);
+
   await connectToDB();
 
-  app.listen(port);
+  initSocket(httpServer);
+
+  httpServer.listen(port);
 };
 
 startServer()

@@ -6,8 +6,9 @@ export const connectToDB = async (): Promise<void> => {
   try {
     await prisma.$connect();
     console.log('database ready 🔥🔥🔥');
-  } catch (err) {
-    process.exit(1);
+  } catch (err: any) {
+    throw new Error(err);
+    // process.exit(1);
   }
 };
 
