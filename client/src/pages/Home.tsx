@@ -6,15 +6,21 @@ import ChatList from '@comps/Chat/Rooms/ChatList';
 import Sidebar from '@comps/Chat/Sidebar/Sidebar';
 import MySpinner from '@comps/Shared/Spinner';
 import { useGetUserQuery } from '@features/user/userApiSlices';
+import { getSocket } from '@utils/socket';
 
 const Home = () => {
   const { isLoading, data } = useGetUserQuery();
+
+  const socket = getSocket();
 
   useEffect(() => {
     if (!isLoading && !data) {
       redirect('/login');
     }
-  }, [isLoading]);
+    if (data) {
+      socket?.emit('addUser', { username: data.username, userId: data.id });
+    }
+  }, [isLoading, data]);
 
   if (isLoading) {
     return (

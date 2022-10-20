@@ -1,10 +1,15 @@
+import { useAppDispatch } from '@app/hooks';
 import MySpinner from '@comps/Shared/Spinner';
+import { IMessage } from '@features/chats/chat.types';
 import {
+  chatApiSlice,
   useGetMessagesQuery,
   useGetRoomsQuery,
 } from '@features/chats/chatApiSlice';
 import SendMessage from '@features/chats/SendMessage';
 import { useGetUserQuery } from '@features/user/userApiSlices';
+import { getSocket } from '@utils/socket';
+
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -13,6 +18,10 @@ import RoomHeader from './MessageHeader';
 
 const Messages = () => {
   const { data: user } = useGetUserQuery();
+
+  const dispatch = useAppDispatch();
+
+  const socket = getSocket();
 
   const [param] = useSearchParams();
 
@@ -32,6 +41,35 @@ const Messages = () => {
       setIsRoomValid(false);
     }
   }, [userId, rooms]);
+
+  useEffect(() => {
+    socket?.on('receiveMessage', (data: IMessage) => {
+      console.log('receive message : ', data);
+      if (roomId && data.roomId === parseInt(roomId)) {
+        dispatch(
+          chatApiSlice.util.updateQueryData(
+            'getMessages',
+            roomId,
+            (draft: IMessage[]) => {
+              // DEV ONLY
+              // if (import.meta.env.DEV) {
+              const index = draft.findIndex(
+                (messages) => messages.id === data.id
+              );
+              if (index < 0) {
+                draft.push(data);
+              }
+              // }
+              // if (import.meta.env.PROD) {
+              //   // PROD ONLY
+              //   draft.push(data);
+              // }
+            }
+          )
+        );
+      }
+    });
+  }, [socket]);
 
   const {
     data: messages,

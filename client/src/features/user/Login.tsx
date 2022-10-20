@@ -10,15 +10,24 @@ import useForm from '@hooks/useForm';
 import { setToken } from '@utils/token';
 
 import { useLoginMutation } from './userApiSlices';
+import { getSocket } from '@utils/socket';
 
 const Login = () => {
   const [loginUser, { isLoading, isError }] = useLoginMutation();
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const socket = getSocket();
+
+  console.log('socket : ', socket);
+
   const login = async (): Promise<void> => {
     try {
       const payload = await loginUser({ identity, password }).unwrap();
+      socket?.emit('addUser', {
+        username: payload.user.username,
+        userId: payload.user.id,
+      });
       setToken(payload.token);
       navigate('/');
     } catch (error: any) {

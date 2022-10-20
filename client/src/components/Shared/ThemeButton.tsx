@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import Moon from '@assets/Moon';
 import Sun from '@assets/Sun';
 

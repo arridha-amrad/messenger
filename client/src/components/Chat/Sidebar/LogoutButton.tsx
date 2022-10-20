@@ -5,13 +5,17 @@ import LogoutIcon from '@assets/LogoutIcon';
 import LogoutDialog from '@comps/Shared/LogoutDialog';
 import Modal from '@comps/Shared/Modal';
 import { useLogoutMutation } from '@features/user/userApiSlices';
+import { getSocket } from '@utils/socket';
 
 const LogoutButton = () => {
   const [logout, { isLoading }] = useLogoutMutation();
   const navigate = useNavigate();
 
+  const socket = getSocket();
+
   const handleLogout = async () => {
     await logout();
+    socket?.disconnect();
     navigate('/login');
   };
 

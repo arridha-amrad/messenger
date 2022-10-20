@@ -1,11 +1,15 @@
 import MySpinner from '@comps/Shared/Spinner';
 import useForm from '@hooks/useForm';
+import useSocket from '@hooks/useSocket';
+import { getSocket } from '@utils/socket';
 import { useSearchParams } from 'react-router-dom';
 
 import { useSendMessageMutation } from './chatApiSlice';
 
 const SendMessage = () => {
   const [send, { isLoading }] = useSendMessageMutation();
+
+  const socket = getSocket();
 
   const [param, setParam] = useSearchParams();
 
@@ -20,6 +24,9 @@ const SendMessage = () => {
           body: text,
           toId: receiverId,
         }).unwrap();
+
+        socket?.emit('sendMessage', { message: result, toId: receiverId });
+
         if (room === 'undefined') {
           setParam({
             user: receiverId,

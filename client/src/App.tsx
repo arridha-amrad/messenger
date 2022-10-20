@@ -3,8 +3,10 @@ import Login from '@features/user/Login';
 import Register from '@features/user/Register';
 import { useEffect } from 'react';
 import Home from './pages/Home';
+import useSocket from '@hooks/useSocket';
 
 export default function App() {
+  useSocket();
   useEffect(() => {
     let theme = localStorage.getItem('theme');
     if (theme === null) {
