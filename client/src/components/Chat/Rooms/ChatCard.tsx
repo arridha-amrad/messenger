@@ -35,7 +35,7 @@ const ChatCard = ({ room }: { room: IRoom }) => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        socketListenTypingAlert(socket, dispatch);
+        socketListenTypingAlert(socket, dispatch, room.message?.body ?? '');
         return () => {
             socket?.off('typingAlert');
         };
@@ -56,7 +56,7 @@ const ChatCard = ({ room }: { room: IRoom }) => {
             <div className="flex-1 flex-nowrap overflow-hidden -space-y-[2px] text-slate-600 dark:text-slate-300">
                 <h1 className="font-medium">{room.user.username}</h1>
                 <p className="overflow-hidden text-sm font-thin text-ellipsis text-slate-700 dark:text-gray-100 whitespace-nowrap">
-                    {room.message?.body}
+                    {room.message?.body ?? ''}
                 </p>
             </div>
             <div className="flex flex-col w-18">

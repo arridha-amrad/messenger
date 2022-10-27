@@ -62,7 +62,7 @@ export const initSocket = (
 		socket.on('typing', (data) => {
 			const toSocketId = findSocketId(data.toId);
 			if (toSocketId !== undefined) {
-				io.to(toSocketId).emit('typingAlert', data.roomId);
+				io.to(toSocketId).emit('typingAlert', data);
 			}
 		});
 		socket.on('disconnect', () => {

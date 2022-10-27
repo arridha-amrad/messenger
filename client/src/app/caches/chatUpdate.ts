@@ -1,4 +1,5 @@
 import { TAppDispatch } from '@app/hooks';
+import { Typing } from '@context/socket.client.types';
 import { IMessage, IRoom, IUserChat } from '@features/chats/chat.types';
 import { chatApiSlice } from '@features/chats/chatApiSlice';
 
@@ -43,12 +44,16 @@ export const addNewMessageToRoomCache = (dispatch: TAppDispatch, roomId: string,
     );
 };
 
-export const setRoomIsTyping = (dispatch: TAppDispatch, roomId: string) => {
+export const setRoomIsTyping = (dispatch: TAppDispatch, data: Typing, lastBody: string) => {
     dispatch(
         chatApiSlice.util.updateQueryData('getRooms', undefined, (rooms) => {
-            const room = rooms.find((room) => room.id === parseInt(roomId));
+            const room = rooms.find((room) => room.id === parseInt(data.roomId));
             if (room && room.message) {
-                room.message.body = 'typing...';
+                if (data.isTyping) {
+                    room.message.body = 'typing...';
+                } else {
+                    room.message.body = lastBody;
+                }
             }
         })
     );

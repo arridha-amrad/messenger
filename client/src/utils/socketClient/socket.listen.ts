@@ -18,8 +18,8 @@ export const socketListenReceiveMessage = (socket: MySocket, dispatch: TAppDispa
     });
 };
 
-export const socketListenTypingAlert = (socket: MySocket, dispatch: TAppDispatch) => {
-    socket?.on('typingAlert', (roomId) => {
-        setRoomIsTyping(dispatch, roomId);
+export const socketListenTypingAlert = (socket: MySocket, dispatch: TAppDispatch, body: string) => {
+    socket?.on('typingAlert', (data) => {
+        setRoomIsTyping(dispatch, data, body);
     });
 };

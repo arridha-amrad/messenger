@@ -1,11 +1,10 @@
 import { IMessage, IUserChat } from '@features/chats/chat.types';
-import { IUser } from '@features/user/user.types';
 
 export interface ServerToClientEvents {
     noArg: () => void;
     withAck: (d: string, callback: (e: number) => void) => void;
     receiveMessage: (data: ReceiveMessage) => void;
-    typingAlert: (roomId: string) => void;
+    typingAlert: (data: Typing) => void;
 }
 
 export interface ClientToServerEvents {
@@ -22,6 +21,7 @@ export interface InterServerEvents {
 export interface Typing {
     toId: string;
     roomId: string;
+    isTyping: boolean;
 }
 
 export interface SocketData {

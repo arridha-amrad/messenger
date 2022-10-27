@@ -9,6 +9,6 @@ export const socketEmitSendMessage = (socket: MySocket, message: IMessage, sende
     });
 };
 
-export const socketEmitTyping = (socket: MySocket, toId: string, roomId: string) => {
-    socket?.emit('typing', { roomId, toId });
+export const socketEmitTyping = (socket: MySocket, toId: string, roomId: string, isTyping: boolean) => {
+    socket?.emit('typing', { roomId, toId, isTyping });
 };

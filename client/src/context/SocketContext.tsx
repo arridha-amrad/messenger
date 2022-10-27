@@ -27,6 +27,11 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
             effRef.current = false;
         };
     }, []);
+    useEffect(() => {
+        return () => {
+            socket?.close();
+        };
+    }, [socket]);
     return <SocketContext.Provider value={{ socket, setSocket }}>{children}</SocketContext.Provider>;
 };
 

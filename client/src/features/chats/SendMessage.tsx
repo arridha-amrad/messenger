@@ -67,7 +67,8 @@ const SendMessage = () => {
     return (
         <form className="relative w-full lg:px-3 px-0 h-[80px] lg:mb-2" onSubmit={onSubmit}>
             <textarea
-                onFocus={() => socketEmitTyping(socket, receiverId ?? '0', room ?? '0')}
+                onFocus={() => socketEmitTyping(socket, receiverId ?? '0', room ?? '0', true)}
+                onBlur={() => socketEmitTyping(socket, receiverId ?? '0', room ?? '0', false)}
                 onChange={onChange}
                 name="text"
                 value={text}
