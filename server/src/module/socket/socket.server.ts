@@ -51,14 +51,18 @@ export const initSocket = (
 			console.log('after adding user : ', users);
 		});
 		socket.on('sendMessage', (data: SendMessage) => {
-			console.log('sent mesage : ', data);
 			const toSocketId = findSocketId(data.toId);
 			if (toSocketId !== undefined) {
-				console.log('sending to : ', toSocketId);
 				io.to(toSocketId).emit('receiveMessage', {
 					message: data.message,
 					sender: data.sender,
 				});
+			}
+		});
+		socket.on('typing', (data) => {
+			const toSocketId = findSocketId(data.toId);
+			if (toSocketId !== undefined) {
+				io.to(toSocketId).emit('typingAlert', data.roomId);
 			}
 		});
 		socket.on('disconnect', () => {

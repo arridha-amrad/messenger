@@ -1,10 +1,10 @@
 import { useAppDispatch } from '@app/hooks';
 import MySpinner from '@comps/Shared/Spinner';
 import { useSocket } from '@context/SocketContext';
-import { IMessage } from '@features/chats/chat.types';
-import { chatApiSlice, useGetMessagesQuery, useGetRoomsQuery } from '@features/chats/chatApiSlice';
+import { useGetMessagesQuery, useGetRoomsQuery } from '@features/chats/chatApiSlice';
 import SendMessage from '@features/chats/SendMessage';
 import { useGetUserQuery } from '@features/user/userApiSlices';
+import { socketListenReceiveMessage } from '@utils/socketClient/socket.listen';
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -30,39 +30,7 @@ const Messages = () => {
     const { socket } = useSocket();
 
     useEffect(() => {
-        socket?.on('receiveMessage', ({ message, sender }) => {
-            // update chat card
-            dispatch(
-                chatApiSlice.util.updateQueryData('getRooms', undefined, (rooms) => {
-                    const idx = rooms.findIndex((r) => r.id === message.roomId);
-                    if (idx >= 0) {
-                        rooms[idx].message = message;
-                        rooms[idx].sum += 1;
-                    } else {
-                        rooms.splice(0, 0, {
-                            sum: 1,
-                            user: sender,
-                            createdAt: message.createdAt,
-                            id: message.roomId,
-                            message,
-                            isGroup: false,
-                            updatedAt: message.updatedAt,
-                        });
-                    }
-                })
-            );
-
-            // update room messages
-            if (parseInt(roomId ?? '0') === message.roomId) {
-                dispatch(
-                    chatApiSlice.util.updateQueryData('getMessages', roomId!, (draft) => {
-                        draft.push(message);
-                    })
-                );
-            } else {
-                dispatch(chatApiSlice.util.invalidateTags([{ type: 'Message', id: message.roomId }]));
-            }
-        });
+        socketListenReceiveMessage(socket, dispatch, roomId ?? '0');
         return () => {
             socket?.off('receiveMessage');
         };

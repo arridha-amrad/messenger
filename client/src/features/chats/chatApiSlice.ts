@@ -5,14 +5,14 @@ export const chatApiSlice = api.injectEndpoints({
     endpoints: (builder) => ({
         getMessages: builder.query<IMessage[], string | undefined>({
             query: (roomId?: string) => (roomId ? `chat/messages?roomId=${roomId}` : null),
-            providesTags: (result, err, arg) => [{ type: 'Message', id: arg }],
+            providesTags: (_, __, arg) => [{ type: 'Messages', id: arg }],
         }),
         getRooms: builder.query<IRoom[], void>({
             query: () => 'chat/',
             transformResponse(baseQueryReturnValue: { rooms: IRoom[] }, meta, arg) {
                 return baseQueryReturnValue.rooms;
             },
-            providesTags: ['Room'],
+            providesTags: ['Rooms'],
         }),
         sendMessage: builder.mutation<IMessage, ISendMessageRequestBody & { roomId?: string }>({
             query: (data: ISendMessageRequestBody & { roomId?: string }) => ({

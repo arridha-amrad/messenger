@@ -1,7 +1,11 @@
+import { useAppDispatch } from '@app/hooks';
 import SeenIcon from '@assets/SeenIcon';
 import UnSeenIcon from '@assets/UnSeen';
+import { useSocket } from '@context/SocketContext';
 import { IRoom } from '@features/chats/chat.types';
 import { useGetUserQuery } from '@features/user/userApiSlices';
+import { socketListenTypingAlert } from '@utils/socketClient/socket.listen';
+import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const ChatCard = ({ room }: { room: IRoom }) => {
@@ -26,6 +30,16 @@ const ChatCard = ({ room }: { room: IRoom }) => {
     };
 
     const receiverId = param.get('user');
+
+    const { socket } = useSocket();
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        socketListenTypingAlert(socket, dispatch);
+        return () => {
+            socket?.off('typingAlert');
+        };
+    }, [socket]);
 
     return (
         <div

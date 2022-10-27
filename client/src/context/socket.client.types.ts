@@ -1,20 +1,27 @@
-import { IMessage } from '@features/chats/chat.types';
+import { IMessage, IUserChat } from '@features/chats/chat.types';
 import { IUser } from '@features/user/user.types';
 
 export interface ServerToClientEvents {
     noArg: () => void;
     withAck: (d: string, callback: (e: number) => void) => void;
     receiveMessage: (data: ReceiveMessage) => void;
+    typingAlert: (roomId: string) => void;
 }
 
 export interface ClientToServerEvents {
     hello: () => void;
     addUser: (data: SocketUser) => void;
     sendMessage: (data: SendMessage) => void;
+    typing: (data: Typing) => void;
 }
 
 export interface InterServerEvents {
     ping: () => void;
+}
+
+export interface Typing {
+    toId: string;
+    roomId: string;
 }
 
 export interface SocketData {
@@ -35,6 +42,6 @@ export interface SendMessage {
 
 export type ReceiveMessage = Omit<SendMessage, 'toId'>;
 
-export type Sender = Omit<IUser, 'password' | 'createdAt' | 'updatedAt'>;
+export type Sender = IUserChat;
 
 export type StoredSocketUser = SocketUser & { socketId: string };

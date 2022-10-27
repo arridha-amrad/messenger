@@ -1,93 +1,99 @@
 @layer components {
-  .app-scrollbar {
-    @apply scrollbar-thin scrollbar-track-rounded-lg dark:scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg scrollbar-thumb-gray-400 scrollbar-track-gray-300 dark:scrollbar-track-gray-400 scroll-p-5;
-  }
-  .btn {
-    @apply h-10 px-4 overflow-hidden text-lg text-white transition-all duration-100 ease-linear rounded-lg ring-offset-2 focus:ring-2;
-  }
-  .btn-special {
-    @apply bg-gradient-to-r from-indigo-500 to-red-500 ring-indigo-500;
-  }
-  .link {
-    @apply text-blue-500 dark:text-blue-400;
-  }
+    .app-scrollbar {
+        @apply scrollbar-thin scrollbar-track-rounded-lg dark:scrollbar-thumb-slate-500 scrollbar-thumb-rounded-lg scrollbar-thumb-gray-400 scrollbar-track-gray-300 dark:scrollbar-track-gray-400 scroll-p-5;
+    }
+    .btn {
+        @apply h-10 px-4 overflow-hidden text-lg text-white transition-all duration-100 ease-linear rounded-lg ring-offset-2 focus:ring-2;
+    }
+    .btn-special {
+        @apply bg-gradient-to-r from-indigo-500 to-red-500 ring-indigo-500;
+    }
+    .link {
+        @apply text-blue-500 dark:text-blue-400;
+    }
 
-  .list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 0 1rem;
-    list-style: none;
-  }
-  .shared {
-    position: relative; /* Setup a relative container for our psuedo elements */
-    max-width: 80%;
-    margin-bottom: 15px;
-    padding: 10px 20px;
-    line-height: 24px;
-    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
-    border-radius: 25px;
-  }
-  .shared::before {
-    width: 20px;
-  }
+    .message-btn {
+        @apply absolute disabled:cursor-text cursor-pointer bg-blue-500 dark:bg-indigo-500 disabled:bg-blue-200 disabled:dark:bg-slate-700 text-white px-4 py-1 rounded-lg top-[50%] sm:right-8 -translate-y-1/2;
+    }
 
-  .shared::after {
-    width: 26px;
-    background-color: var(
-      --bg-messages-container
-    ); /* All tails have the same bg cutout */
-  }
+    .message-input {
+        @apply w-full h-full py-2 pl-4 leading-4 transition-all duration-200 ease-in border border-transparent outline-none resize-none lg:rounded-lg focus:ring-blue-200 dark:focus:ring-indigo-700 focus:ring-2 focus:ring-offset-2 dark:focus:border-indigo-500 focus:border-blue-500 dark:focus:ring-offset-0 pr-28;
+    }
 
-  .shared:before,
-  .shared:after {
-    position: absolute;
-    bottom: 0;
-    height: 25px; /* height of our bubble "tail" - should match the border-radius above */
-    content: '';
-  }
+    .list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+        padding: 0 1rem;
+        list-style: none;
+    }
+    .shared {
+        position: relative; /* Setup a relative container for our psuedo elements */
+        max-width: 80%;
+        margin-bottom: 15px;
+        padding: 10px 20px;
+        line-height: 24px;
+        word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+        border-radius: 25px;
+    }
+    .shared::before {
+        width: 20px;
+    }
 
-  .sent {
-    align-self: flex-end;
-    color: white;
-    background: var(--bg-bubble-sent);
-  }
+    .shared::after {
+        width: 26px;
+        background-color: var(--bg-messages-container); /* All tails have the same bg cutout */
+    }
 
-  .sent::before {
-    right: -7px;
-    background-color: var(--bg-bubble-sent);
-    border-bottom-left-radius: 16px 14px;
-  }
+    .shared:before,
+    .shared:after {
+        position: absolute;
+        bottom: 0;
+        height: 25px; /* height of our bubble "tail" - should match the border-radius above */
+        content: '';
+    }
 
-  .sent::after {
-    right: -26px;
-    border-bottom-left-radius: 10px;
-  }
+    .sent {
+        align-self: flex-end;
+        color: white;
+        background: var(--bg-bubble-sent);
+    }
 
-  .received {
-    align-self: flex-start;
-    color: theme('colors.white');
-    background: var(--bg-bubble-received);
-  }
+    .sent::before {
+        right: -7px;
+        background-color: var(--bg-bubble-sent);
+        border-bottom-left-radius: 16px 14px;
+    }
 
-  .received::before {
-    left: -7px;
-    background-color: var(--bg-bubble-received);
-    border-bottom-right-radius: 16px 14px;
-  }
+    .sent::after {
+        right: -26px;
+        border-bottom-left-radius: 10px;
+    }
 
-  .received::after {
-    left: -26px;
-    border-bottom-right-radius: 10px;
-  }
+    .received {
+        align-self: flex-start;
+        color: theme('colors.white');
+        background: var(--bg-bubble-received);
+    }
 
-  .noTail {
-    margin-bottom: 5px;
-  }
+    .received::before {
+        left: -7px;
+        background-color: var(--bg-bubble-received);
+        border-bottom-right-radius: 16px 14px;
+    }
 
-  .noTail:before,
-  .noTail:after {
-    opacity: 0;
-  }
+    .received::after {
+        left: -26px;
+        border-bottom-right-radius: 10px;
+    }
+
+    .noTail {
+        margin-bottom: 5px;
+    }
+
+    .noTail:before,
+    .noTail:after {
+        opacity: 0;
+    }
 }

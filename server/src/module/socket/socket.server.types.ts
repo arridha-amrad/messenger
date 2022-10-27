@@ -5,16 +5,23 @@ export interface ServerToClientEvents {
 	basicEmit: (a: number, b: string, c: Buffer) => void;
 	withAck: (d: string, callback: (e: number) => void) => void;
 	receiveMessage: (data: ReceiveMessage) => void;
+	typingAlert: (roomId: string) => void;
 }
 
 export interface ClientToServerEvents {
 	hello: () => void;
 	addUser: (data: SocketUser) => void;
 	sendMessage: (data: SendMessage) => void;
+	typing: (data: Typing) => void;
 }
 
 export interface InterServerEvents {
 	ping: () => void;
+}
+
+export interface Typing {
+	toId: string;
+	roomId: string;
 }
 
 export interface SocketData {

@@ -1,10 +1,9 @@
-import { useGetUserQuery } from '@features/user/userApiSlices';
 import { serverOrigin } from '@utils/config';
 import { createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ClientToServerEvents, ServerToClientEvents } from './socket.client.types';
 
-type MySocket = Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
+export type MySocket = Socket<ServerToClientEvents, ClientToServerEvents> | undefined;
 
 interface SocketState {
     socket: MySocket;
