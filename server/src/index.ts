@@ -1,25 +1,24 @@
-import { createServer } from './app';
-import { config } from './utils/config';
-import { connectToDB } from './utils/db';
-import { createServer as serverInit } from 'http';
-import { initSocket } from './module/socket/socket.server';
+import 'dotenv/config';
 
-const port = config.PORT;
+import { createServer as serverInit } from 'http';
+import { createServer } from '@/app';
+import { initSocket } from './module/socket/socket.server';
+import { connectDb } from '@/lib/drizzle/db';
+
+const port = 5000;
 
 const startServer = async (): Promise<void> => {
 	const app = createServer();
-
 	const httpServer = serverInit(app);
-
-	await connectToDB();
-
 	initSocket(httpServer);
-
-	httpServer.listen(port);
+	await connectDb();
 };
 
 startServer()
-	.then(() => {
-		console.log(`server ready - ${port} 🔥🔥🔥`);
+	.then(async () => {
+		console.log(`== Server running at: http://localhost:${port} ==`);
 	})
-	.catch((err) => console.log('failed to run server : ', err));
+	.catch((err) => {
+		console.log(err);
+		process.exit(1);
+	});

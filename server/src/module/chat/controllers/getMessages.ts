@@ -1,6 +1,6 @@
 import { findMessages, readMessage } from '@chat-module/chat.services';
 import { IMessageModel } from '@chat-module/chat.types';
-import { disconnectDB } from '@utils/db';
+import { disconnectDB } from 'src/lib/drizzle/db';
 import { Request, Response } from 'express';
 
 export default async (req: Request, res: Response): Promise<void> => {

@@ -1,22 +1,40 @@
-import express from 'express';
-import UserRoute from '@user-module/user.routes';
-import ChatRoute from '@chat-module/chat.routes';
-// import morgan from 'morgan';
+import express, { Response, Request, NextFunction } from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import { config } from '@utils/config';
+import morgan from 'morgan';
+import UserRoutes from '@/routes/user';
+import AuthRoutes from '@/routes/auth';
+import { CustomError, ValidationError } from './utils/CustomError';
 
 export const createServer = (): express.Express => {
-  const app = express();
+	const app = express();
+	app.use(cors({ credentials: true, origin: process.env.CLIENT_ORIGIN }));
+	app.use(express.json());
+	app.use(morgan('dev'));
+	app.use(cookieParser());
 
-  app.use(cors({ credentials: true, origin: config.CLIENT_ORIGIN }));
+	app.get('/api/test', (req, res) => {
+		res.status(200).json({ message: 'Hello World' });
+	});
 
-  app.use(express.json());
-  // app.use(morgan('dev'));
-  app.use(cookieParser());
+	app.use('/api/user', UserRoutes);
+	app.use('/api/auth', AuthRoutes);
 
-  app.use('/api/user', UserRoute);
-  app.use('/api/chat', ChatRoute);
+	app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+		if (err instanceof ValidationError) {
+			res.status(err.status).json(err.errors);
+			return;
+		}
+		if (err instanceof CustomError) {
+			res.status(err.status).json({ message: err.message });
+			return;
+		}
+		console.error(err);
+		res.status(500).send('Something broke!');
+		return;
+	});
 
-  return app;
+	app.listen(5000);
+
+	return app;
 };

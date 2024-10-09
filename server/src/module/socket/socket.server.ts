@@ -1,4 +1,3 @@
-import { config } from '@utils/config';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
 import {
@@ -32,7 +31,7 @@ const removeUser = (socketId: string): void => {
 };
 
 export const initSocket = (
-	httpServer: Server<typeof IncomingMessage, typeof ServerResponse>
+	httpServer: Server<typeof IncomingMessage, typeof ServerResponse>,
 ): void => {
 	const io = new SocketIOServer<
 		ClientToServerEvents,
@@ -41,7 +40,7 @@ export const initSocket = (
 		SocketData
 	>(httpServer, {
 		cors: {
-			origin: config.CLIENT_ORIGIN,
+			origin: process.env.CLIENT_ORIGIN,
 		},
 	});
 

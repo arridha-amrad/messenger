@@ -3,35 +3,43 @@ import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import path from 'path';
 
-export type TokenTypes = 'link' | 'auth' | 'refresh';
-
-export interface IVerifyTokenPayload {
-	userId: string;
-	tokenId: number;
-	type: TokenTypes;
-	iat: number;
-	exp: number;
-}
-
 const privateKey = fs.readFileSync(
 	path.join(process.cwd(), './keys/private.pem'),
 );
 const publicKey = fs.readFileSync(
 	path.join(process.cwd(), './keys/public.pem'),
 );
+export type TokenTypes = 'link' | 'auth' | 'refresh';
+export interface IVerifyTokenPayload {
+	userId: string;
+	tokenId: string | null;
+	type: TokenTypes;
+	iat: number;
+	exp: number;
+}
 
-export const createToken = async (
-	userId: string,
-	type: TokenTypes,
-): Promise<string> => {
+const setExpiration = (type: TokenTypes) => {
+	switch (type) {
+		case 'auth':
+			return '2h';
+		default:
+			return '1d';
+	}
+};
+
+type Param = {
+	userId: string;
+	type: TokenTypes;
+	tokenId?: string;
+};
+export const createToken = async ({ tokenId, type, userId }: Param) => {
 	const result: string = await new Promise((resolve, reject) => {
 		jwt.sign(
-			{ userId, type },
+			{ userId, type, tokenId: tokenId ?? null },
 			privateKey,
 			{
 				algorithm: 'RS256',
-				expiresIn:
-					type === 'link' ? '1d' : type === 'auth' ? '2h' : '1d',
+				expiresIn: setExpiration(type),
 			},
 			(err, token) => {
 				if (err !== null) {
@@ -46,24 +54,30 @@ export const createToken = async (
 	return result;
 };
 
-export const verifyToken = async (
-	token: string,
-	type: TokenTypes,
-): Promise<IVerifyTokenPayload> => {
+type Param2 = {
+	token: string;
+	type: TokenTypes;
+	ignoreExpiration?: boolean;
+};
+export const verifyToken = async ({
+	token,
+	type,
+	ignoreExpiration,
+}: Param2): Promise<IVerifyTokenPayload> => {
 	const result: IVerifyTokenPayload = await new Promise((resolve, reject) => {
 		jwt.verify(
 			token,
 			publicKey,
 			{
 				algorithms: ['RS256'],
-				maxAge: type === 'link' ? '1d' : type === 'auth' ? '2h' : '1d',
+				ignoreExpiration: !!ignoreExpiration,
+				maxAge: setExpiration(type),
 			},
 			(err, payload) => {
 				if (err) {
 					reject(new Error(err.message));
 				}
-				const data = payload as IVerifyTokenPayload;
-				resolve(data);
+				resolve(payload as IVerifyTokenPayload);
 			},
 		);
 	});
@@ -91,19 +105,14 @@ export const verifyAuthToken = async (
 		(err, payload) => {
 			if (err !== null) {
 				if (err.message === 'jwt expired') {
-					res.status(401).send('token expired');
-					return;
+					return res.status(401).send('token expired');
 				} else {
-					throw new Error(
-						`Verification token failure : ${err.message}`,
-					);
+					return res.status(500).send(err.message);
 				}
 			}
-
 			const { userId, type } = payload as IVerifyTokenPayload;
 			if (type !== 'auth') {
-				res.status(403).json({ error: 'invalid token' });
-				return;
+				return res.status(403).json({ error: 'invalid token' });
 			}
 			req.app.locals.userId = userId;
 			next();

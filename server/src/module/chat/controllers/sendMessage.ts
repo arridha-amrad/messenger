@@ -6,7 +6,7 @@ import {
 	saveMessage,
 } from '@chat-module/chat.services';
 import { IRoomModel } from '@chat-module/chat.types';
-import { disconnectDB } from '@utils/db';
+import { disconnectDB } from 'src/lib/drizzle/db';
 
 export default async (req: Request, res: Response): Promise<void> => {
 	const { body, toId } = req.body;

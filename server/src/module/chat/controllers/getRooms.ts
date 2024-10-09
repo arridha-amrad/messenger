@@ -4,7 +4,7 @@ import {
 	findReceiverUnreadMessages,
 	findRooms,
 } from '@chat-module/chat.services';
-import { disconnectDB } from '@utils/db';
+import { disconnectDB } from 'src/lib/drizzle/db';
 
 export default async (req: Request, res: Response): Promise<void> => {
 	const userId = req.app.locals.userId;
