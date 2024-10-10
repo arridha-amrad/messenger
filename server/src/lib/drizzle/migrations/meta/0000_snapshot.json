@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "700bb7f6-ef90-4294-8539-81c8dd65fa5c",
+  "id": "0f26b66c-6717-4520-96bf-e2f1c0ab60a5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "chats": {
@@ -9,11 +9,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'921dcc02-77c3-4fbe-a0cc-7b79c57be23f'"
+          "autoincrement": false
         },
         "name": {
           "name": "name",
@@ -70,14 +69,14 @@
         },
         "chat_id": {
           "name": "chat_id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -127,14 +126,14 @@
       "columns": {
         "chat_id": {
           "name": "chat_id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -185,11 +184,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "'556ed28e-03db-4854-a4c9-05b18ff8501a'"
+          "autoincrement": false
         },
         "value": {
           "name": "value",
@@ -200,7 +198,7 @@
         },
         "user_id": {
           "name": "user_id",
-          "type": "varchar(200)",
+          "type": "varchar(15)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -306,8 +304,8 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "users_id_pk": {
-          "name": "users_id_pk",
+        "users_id": {
+          "name": "users_id",
           "columns": [
             "id"
           ]

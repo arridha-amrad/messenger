@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import UserRoutes from '@/routes/user';
 import AuthRoutes from '@/routes/auth';
+import ChatRoutes from '@/routes/chat';
 import { CustomError, ValidationError } from './utils/CustomError';
 
 export const createServer = (): express.Express => {
@@ -12,14 +13,12 @@ export const createServer = (): express.Express => {
 	app.use(express.json());
 	app.use(morgan('dev'));
 	app.use(cookieParser());
-
 	app.get('/api/test', (req, res) => {
 		res.status(200).json({ message: 'Hello World' });
 	});
-
 	app.use('/api/user', UserRoutes);
 	app.use('/api/auth', AuthRoutes);
-
+	app.use('/api/chats', ChatRoutes);
 	app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 		if (err instanceof ValidationError) {
 			res.status(err.status).json(err.errors);
@@ -33,8 +32,6 @@ export const createServer = (): express.Express => {
 		res.status(500).send('Something broke!');
 		return;
 	});
-
 	app.listen(5000);
-
 	return app;
 };
