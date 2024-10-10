@@ -1,121 +1,110 @@
-import { useAppDispatch } from '@app/hooks';
-import MySpinner from '@comps/Shared/Spinner';
-import { useSocket } from '@context/SocketContext';
-import { useGetMessagesQuery, useGetRoomsQuery } from '@features/chats/chatApiSlice';
-import SendMessage from '@features/chats/SendMessage';
-import { useGetUserQuery } from '@features/user/userApiSlices';
-import { socketListenReceiveMessage } from '@utils/socketClient/socket.listen';
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-
-import RoomHeader from './MessageHeader';
+import RoomHeader from "./MessageHeader";
+import { useSocket } from "@/context/SocketContext";
+import { socketListenReceiveMessage } from "@/utils/socketClient/socket.listen";
 
 const Messages = () => {
-    const { data: user } = useGetUserQuery();
+  const [param] = useSearchParams();
 
-    const [param] = useSearchParams();
+  const roomId = param.get("room");
+  const userId = param.get("user");
 
-    const dispatch = useAppDispatch();
+  // we only show the message_composer when user is in room list
+  const [isRoomValid, setIsRoomValid] = useState(false);
 
-    const { data: rooms } = useGetRoomsQuery(undefined, { skip: !user });
+  const { socket } = useSocket();
 
-    const roomId = param.get('room');
-    const userId = param.get('user');
+  useEffect(() => {
+    socketListenReceiveMessage(socket, dispatch, roomId ?? "0");
+    return () => {
+      socket?.off("receiveMessage");
+    };
+  }, [socket, roomId]);
 
-    // we only show the message_composer when user is in room list
-    const [isRoomValid, setIsRoomValid] = useState(false);
+  useEffect(() => {
+    const currRoom = rooms?.find((r) => r.user.id === userId);
+    if (currRoom) {
+      setIsRoomValid(true);
+    } else {
+      setIsRoomValid(false);
+    }
+  }, [userId, rooms]);
 
-    const { socket } = useSocket();
+  const {
+    data: messages,
+    isLoading,
+    isFetching,
+  } = useGetMessagesQuery(roomId ?? undefined, {
+    skip: !roomId,
+  });
 
-    useEffect(() => {
-        socketListenReceiveMessage(socket, dispatch, roomId ?? '0');
-        return () => {
-            socket?.off('receiveMessage');
-        };
-    }, [socket, roomId]);
+  const messagesContainerRef = useRef<HTMLUListElement | null>(null);
+  const outerContainerRef = useRef<HTMLDivElement | null>(null);
 
-    useEffect(() => {
-        const currRoom = rooms?.find((r) => r.user.id === userId);
-        if (currRoom) {
-            setIsRoomValid(true);
-        } else {
-            setIsRoomValid(false);
-        }
-    }, [userId, rooms]);
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      outerContainerRef.current?.scroll({
+        behavior: "auto",
+        top: messagesContainerRef.current?.scrollHeight,
+      });
+    }
+  }, [messages?.length]);
 
-    const {
-        data: messages,
-        isLoading,
-        isFetching,
-    } = useGetMessagesQuery(roomId ?? undefined, {
-        skip: !roomId,
-    });
-
-    const messagesContainerRef = useRef<HTMLUListElement | null>(null);
-    const outerContainerRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        if (messagesContainerRef.current) {
-            outerContainerRef.current?.scroll({
-                behavior: 'auto',
-                top: messagesContainerRef.current?.scrollHeight,
-            });
-        }
-    }, [messages?.length]);
-
-    return (
-        <div className="relative flex flex-col h-full overflow-hidden">
-            {isRoomValid && (
-                <>
-                    <RoomHeader />
-                    <div
-                        ref={outerContainerRef}
-                        className="relative flex-1 pr-2 mt-2 mr-1 overflow-x-hidden overflow-y-auto app-scrollbar"
-                    >
-                        <AnimatedSpinner condition={isLoading || isFetching} />
-                        <ul ref={messagesContainerRef} className="list">
-                            {messages?.map(({ body, senderId }, i) => {
-                                const isLast = i === messages.length - 1;
-                                const isSender = senderId === user?.id;
-                                const isNoTail = !isLast && messages[i + 1]?.senderId === senderId;
-                                return (
-                                    <li
-                                        key={i}
-                                        className={`shared ${isSender ? 'sent' : 'received'} ${
-                                            isNoTail ? 'noTail' : ''
-                                        }`}
-                                    >
-                                        {body}
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
-                    <SendMessage />
-                </>
-            )}
-        </div>
-    );
+  return (
+    <div className="relative flex flex-col h-full overflow-hidden">
+      {isRoomValid && (
+        <>
+          <RoomHeader />
+          <div
+            ref={outerContainerRef}
+            className="relative flex-1 pr-2 mt-2 mr-1 overflow-x-hidden overflow-y-auto app-scrollbar"
+          >
+            <AnimatedSpinner condition={isLoading || isFetching} />
+            <ul ref={messagesContainerRef} className="list">
+              {messages?.map(({ body, senderId }, i) => {
+                const isLast = i === messages.length - 1;
+                const isSender = senderId === user?.id;
+                const isNoTail =
+                  !isLast && messages[i + 1]?.senderId === senderId;
+                return (
+                  <li
+                    key={i}
+                    className={`shared ${isSender ? "sent" : "received"} ${
+                      isNoTail ? "noTail" : ""
+                    }`}
+                  >
+                    {body}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <SendMessage />
+        </>
+      )}
+    </div>
+  );
 };
 
 export default Messages;
 
 const AnimatedSpinner = ({ condition }: { condition: boolean }) => {
-    return (
-        <AnimatePresence>
-            {condition && (
-                <motion.div
-                    exit={{
-                        opacity: 0.4,
-                        transition: { duration: 0.3 },
-                    }}
-                    className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
-                >
-                    <MySpinner />
-                </motion.div>
-            )}
-        </AnimatePresence>
-    );
+  return (
+    <AnimatePresence>
+      {condition && (
+        <motion.div
+          exit={{
+            opacity: 0.4,
+            transition: { duration: 0.3 },
+          }}
+          className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+        >
+          <MySpinner />
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 };

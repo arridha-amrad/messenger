@@ -1,42 +1,34 @@
-import { Link, useNavigate } from 'react-router-dom';
-
-import Logo from '@assets/logo.png';
-import TailwindIcon from '@assets/tailwind-icon';
-import MySpinner from '@comps/Shared/Spinner';
-import TextInput from '@comps/Shared/TextInput';
-import AuthNavbar from '@comps/User/AuthNavbar';
-import useForm from '@hooks/useForm';
-import { setToken } from '@utils/token';
-
-import { useRegisterMutation } from './userApiSlices';
+import AuthNavbar from "@/components/User/AuthNavbar";
+import useForm from "@/hooks/useForm";
+import { Link, useNavigate } from "react-router-dom";
+import Logo from "@/assets/logo.png";
+import TextInput from "@/components/Shared/TextInput";
+import MySpinner from "@/components/Shared/Spinner";
+import TailwindIcon from "@/assets/tailwind-icon";
+import { register as api } from "@/api";
+import { setToken } from "@/lib/axios";
 
 const Register = () => {
-  const [registerUser, { isLoading }] = useRegisterMutation();
   const navigate = useNavigate();
-
   const register = async () => {
-    try {
-      const { token } = await registerUser({
-        email,
-        password,
-        username,
-      }).unwrap();
-      setToken(token);
-      navigate('/');
-    } catch (err: any) {
-      throw new Error(err);
-    }
+    const res = await api({
+      email,
+      password,
+      username,
+    });
+    setToken(res.data.token);
+    navigate("/", { replace: true });
   };
-
   const {
+    isLoading,
     onChange,
     onSubmit,
     state: { email, password, username },
   } = useForm(
     {
-      email: '',
-      username: '',
-      password: '',
+      email: "",
+      username: "",
+      password: "",
     },
     register
   );
@@ -54,21 +46,21 @@ const Register = () => {
               name="email"
               value={email}
               onChange={onChange}
-              type={'text'}
+              type={"text"}
               label="Email Address"
             />
             <TextInput
               name="username"
               value={username}
               onChange={onChange}
-              type={'text'}
-              label="username"
+              type={"text"}
+              label="Username"
             />
             <TextInput
               name="password"
               value={password}
               onChange={onChange}
-              type={'password'}
+              type={"password"}
               label="Password"
             />
             <div className="flex items-center justify-between mt-2">
@@ -82,7 +74,7 @@ const Register = () => {
                   {isLoading ? (
                     <MySpinner className="text-white" />
                   ) : (
-                    'Register'
+                    "Register"
                   )}
                 </button>
               </div>

@@ -1,4 +1,4 @@
-import { useGetUserQuery } from '@features/user/userApiSlices';
+import { useGetUserQuery } from "@/features/user/userApiSlices";
 
 const UserInfo = () => {
   const { data } = useGetUserQuery();

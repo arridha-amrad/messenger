@@ -1,46 +1,46 @@
-import { IMessage, IUserChat } from '@features/chats/chat.types';
+import { IMessage, IUserChat } from "@/features/chats/chat.types";
 
 export interface ServerToClientEvents {
-    noArg: () => void;
-    withAck: (d: string, callback: (e: number) => void) => void;
-    receiveMessage: (data: ReceiveMessage) => void;
-    typingAlert: (data: Typing) => void;
+  noArg: () => void;
+  withAck: (d: string, callback: (e: number) => void) => void;
+  receiveMessage: (data: ReceiveMessage) => void;
+  typingAlert: (data: Typing) => void;
 }
 
 export interface ClientToServerEvents {
-    hello: () => void;
-    addUser: (data: SocketUser) => void;
-    sendMessage: (data: SendMessage) => void;
-    typing: (data: Typing) => void;
+  hello: () => void;
+  addUser: (data: SocketUser) => void;
+  sendMessage: (data: SendMessage) => void;
+  typing: (data: Typing) => void;
 }
 
 export interface InterServerEvents {
-    ping: () => void;
+  ping: () => void;
 }
 
 export interface Typing {
-    toId: string;
-    roomId: string;
-    isTyping: boolean;
+  toId: string;
+  roomId: string;
+  isTyping: boolean;
 }
 
 export interface SocketData {
-    name: string;
-    age: number;
+  name: string;
+  age: number;
 }
 
 export interface SocketUser {
-    username: string;
-    userId: string;
+  username: string;
+  userId: string;
 }
 
 export interface SendMessage {
-    message: IMessage;
-    toId: string;
-    sender: Sender;
+  message: IMessage;
+  toId: string;
+  sender: Sender;
 }
 
-export type ReceiveMessage = Omit<SendMessage, 'toId'>;
+export type ReceiveMessage = Omit<SendMessage, "toId">;
 
 export type Sender = IUserChat;
 

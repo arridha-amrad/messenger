@@ -1,27 +1,27 @@
-import { AnimatePresence, motion, Variants } from 'framer-motion';
-import { ReactNode, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import { AnimatePresence, motion, Variants } from "framer-motion";
+import { ReactNode, useEffect } from "react";
+import ReactDOM from "react-dom";
 
 interface IProps {
   isOpen: boolean;
   children: ReactNode;
   onClose: VoidFunction;
-  variant: 'dropIn' | 'shock';
+  variant: "dropIn" | "shock";
 }
 
 const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
   const closeModal = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       onClose();
     }
   };
 
   useEffect(() => {
     if (isOpen) {
-      document.addEventListener('keydown', closeModal);
+      document.addEventListener("keydown", closeModal);
     }
     return () => {
-      document.removeEventListener('keydown', closeModal);
+      document.removeEventListener("keydown", closeModal);
     };
   }, [isOpen]);
 
@@ -35,7 +35,7 @@ const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
           />
           <motion.div
             key={isOpen ? 1 : 0}
-            variants={variant === 'dropIn' ? dropInVariant : shockVariant}
+            variants={variant === "dropIn" ? dropInVariant : shockVariant}
             initial="initial"
             animate="animate"
             exit="exit"
@@ -46,7 +46,7 @@ const Modal = ({ children, isOpen, onClose, variant }: IProps) => {
         </>
       )}
     </AnimatePresence>,
-    document.getElementById('portal')!
+    document.getElementById("portal")!
   );
 };
 
@@ -54,19 +54,19 @@ const dropInVariant = {
   initial: {
     scale: 0.8,
     opacity: 0,
-    top: '0%',
-    left: '50%',
-    transform: 'translate(-50%, 0%)',
+    top: "0%",
+    left: "50%",
+    transform: "translate(-50%, 0%)",
   },
   animate: {
     scale: 1,
     opacity: 1,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     transition: {
       duration: 0.3,
-      type: 'spring',
+      type: "spring",
       mass: 1.5,
       damping: 15,
       stiffness: 150,
@@ -89,14 +89,14 @@ const shockVariant = {
   animate: {
     opacity: 1,
     scale: 1,
-    top: '50%',
-    left: '50%',
-    translateX: '-50%',
-    translateY: '-50%',
+    top: "50%",
+    left: "50%",
+    translateX: "-50%",
+    translateY: "-50%",
     transition: {
       duration: 0.4,
       bounce: 0.5,
-      type: 'spring',
+      type: "spring",
     },
   },
   exit: {

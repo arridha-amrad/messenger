@@ -1,5 +1,5 @@
-import SearchIcon from '@assets/SearchIcon';
-import { Dispatch, SetStateAction } from 'react';
+import SearchIcon from "@/assets/SearchIcon";
+import { Dispatch, SetStateAction } from "react";
 
 interface IProps {
   setRoom: Dispatch<SetStateAction<string>>;

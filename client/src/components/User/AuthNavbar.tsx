@@ -1,4 +1,4 @@
-import ThemeButton from '@comps/Shared/ThemeButton';
+import ThemeButton from "../Shared/ThemeButton";
 
 const AuthNavbar = () => {
   return (

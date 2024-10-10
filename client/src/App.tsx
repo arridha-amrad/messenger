@@ -1,19 +1,35 @@
-import { Route, Routes } from 'react-router-dom';
-import Login from '@features/user/Login';
-import Register from '@features/user/Register';
-import Home from './pages/Home';
-import useTheme from '@hooks/useTheme';
-import ProtectedRoute from '@comps/Shared/ProtectedRoute';
+import useTheme from "@/hooks/useTheme";
+import Home from "@/pages/Home";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { me } from "./api";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Home,
+    loader: async () => {
+      const user = await me();
+      return user;
+    },
+  },
+  {
+    path: "/login",
+    Component: Login,
+  },
+  {
+    path: "/register",
+    Component: Register,
+  },
+]);
 
 export default function App() {
-    useTheme();
-    return (
-        <Routes>
-            <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<Home />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-        </Routes>
-    );
+  useTheme();
+  return (
+    <RouterProvider
+      router={router}
+      fallbackElement={<p>Something went wrong</p>}
+    />
+  );
 }

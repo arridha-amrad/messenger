@@ -1,7 +1,8 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from "react";
 
 const useForm = <T>(initialState: T, execute: () => Promise<void>) => {
   const [state, setState] = useState(initialState);
+  const [isLoading, setIsLoading] = useState(false);
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setState({
       ...state,
@@ -10,10 +11,18 @@ const useForm = <T>(initialState: T, execute: () => Promise<void>) => {
   };
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await execute();
+    setIsLoading(true);
+    try {
+      await execute();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return {
     state,
+    isLoading,
     setState,
     onChange,
     onSubmit,

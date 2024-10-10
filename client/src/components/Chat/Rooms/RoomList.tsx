@@ -1,9 +1,9 @@
-import ChatIcon from '@assets/ChatIcon';
-import MySpinner from '@comps/Shared/Spinner';
-import { IRoom } from '@features/chats/chat.types';
-import { useGetRoomsQuery } from '@features/chats/chatApiSlice';
-import { useEffect, useState } from 'react';
-import ChatCard from './ChatCard';
+import ChatIcon from "@/assets/ChatIcon";
+import MySpinner from "@/components/Shared/Spinner";
+import { IRoom } from "@/features/chats/chat.types";
+import { useGetRoomsQuery } from "@/features/chats/chatApiSlice";
+import { useEffect, useState } from "react";
+import ChatCard from "./ChatCard";
 
 interface IProps {
   btnRef: React.MutableRefObject<HTMLButtonElement | null>;
@@ -42,7 +42,7 @@ const RoomList = ({ btnRef, queryRoom }: IProps) => {
           </div>
         ))}
 
-      {rooms.length === 0 && queryRoom === '' && (
+      {rooms.length === 0 && queryRoom === "" && (
         <div className="flex flex-col items-center justify-center gap-4 mt-6">
           <p className="dark:text-slate-500 text-slate-400">
             Your chat history is empty

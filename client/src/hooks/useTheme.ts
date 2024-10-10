@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const useTheme = () => {
   useEffect(() => {
-    let theme = localStorage.getItem('theme');
+    let theme = localStorage.getItem("theme");
     if (theme === null) {
-      theme = 'dark';
+      theme = "dark";
     }
-    document.documentElement.setAttribute('theme-mode', theme);
+    document.documentElement.setAttribute("theme-mode", theme);
   }, []);
 };
 

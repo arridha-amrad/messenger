@@ -1,7 +1,6 @@
-import ThemeButton from '@comps/Shared/ThemeButton';
-
-import LogoutButton from './LogoutButton';
-import UserInfo from './UserInfo';
+import ThemeButton from "@/components/Shared/ThemeButton";
+import LogoutButton from "./LogoutButton";
+import UserInfo from "./UserInfo";
 
 const Sidebar = () => {
   return (
