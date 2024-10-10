@@ -10,6 +10,8 @@ import { NextFunction, Request, Response } from "express";
 import { nanoid } from "nanoid";
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.body);
+
   const { identity, password } = req.body;
   try {
     const currentRefToken = getRefreshTokenFromCookie(req);
@@ -31,9 +33,11 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       throw new ValidationError(errors);
     }
     const user = await findUserByEmailOrUsername(identity);
-    if (user === null) {
+    if (!user) {
       throw new CustomError("User not found", 404);
     }
+    console.log({ user });
+
     const isMatch = await verify(user.password, password, options);
     if (!isMatch) {
       throw new CustomError("password not match", 400);

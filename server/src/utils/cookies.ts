@@ -3,7 +3,6 @@ import { CookieOptions, Request } from "express";
 export const setCookieOptions: CookieOptions = {
   maxAge: 1000 * 60 * 60 * 24 * 365,
   httpOnly: true,
-  sameSite: "lax",
   secure: false,
 };
 
