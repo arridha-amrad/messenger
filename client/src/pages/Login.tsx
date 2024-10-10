@@ -7,18 +7,25 @@ import AuthNavbar from "@/components/User/AuthNavbar";
 import TextInput from "@/components/Shared/TextInput";
 import MySpinner from "@/components/Shared/Spinner";
 import TailwindIcon from "@/assets/tailwind-icon";
+import { login as api } from "@/api";
+import { setToken } from "@/lib/axios";
 
 const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const login = async () => {};
-  const [isAuth, setIsAuth] = useState(false);
-  useEffect(() => {
-    if (isAuth) {
+  const login = async () => {
+    try {
+      const res = await api({
+        identity,
+        password,
+      });
+      console.log(res);
+      setToken(res.data.token);
       navigate("/", { replace: true });
+    } catch (err: any) {
+      setError(err.response.data.message);
     }
-  }, [isAuth]);
-  const { setSocket, socket } = useContext(SocketContext);
+  };
   const {
     isLoading,
     onChange,
@@ -27,7 +34,7 @@ const Login = () => {
   } = useForm(
     {
       identity: "",
-      password: "ariOk123",
+      password: "freePalestine99",
     },
     login
   );

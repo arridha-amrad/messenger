@@ -11,8 +11,6 @@ interface IProps {
 }
 
 const RoomList = ({ btnRef, queryRoom }: IProps) => {
-  let { data, isLoading, isFetching } = useGetRoomsQuery();
-
   const [rooms, setRooms] = useState<IRoom[]>([]);
 
   useEffect(() => {

@@ -5,15 +5,22 @@ type RegisterDTO = {
   email: string;
   password: string;
 };
-
 export const register = async (data: RegisterDTO) => {
-  return await publicAxios.post("/auth/register", data);
+  return publicAxios.post("/auth/register", data);
 };
 
 export const refreshToken = async () => {
-  return await publicAxios.get("/auth/refresh-token");
+  return publicAxios.get("/auth/refresh-token");
 };
 
 export const me = async () => {
   return await privateAxios.get("/auth");
+};
+
+type LoginDTO = {
+  identity: string;
+  password: string;
+};
+export const login = async (data: LoginDTO) => {
+  return publicAxios.post("/auth", data);
 };

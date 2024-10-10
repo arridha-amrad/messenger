@@ -6,9 +6,11 @@ export const setToken = (newToken: string) => (accToken = newToken);
 export const getToken = () => accToken;
 export const publicAxios = axios.create({
   baseURL: `${import.meta.env.VITE_SERVER_URL}/api`,
+  withCredentials: true,
 });
 export const privateAxios = axios.create({
   baseURL: `${import.meta.env.VITE_SERVER_URL}/api`,
+  withCredentials: true,
 });
 privateAxios.interceptors.request.use(
   (config) => {

@@ -10,7 +10,7 @@ const ChatList = () => {
     <div className="flex flex-col h-full py-4 pl-3 pr-2">
       <ChatListHeader ref={btnRef} />
       <SearchRooms setRoom={setQueryRoom} />
-      <RoomList queryRoom={queryRoom} btnRef={btnRef} />
+      {/* <RoomList queryRoom={queryRoom} btnRef={btnRef} /> */}
     </div>
   );
 };

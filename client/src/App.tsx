@@ -3,16 +3,13 @@ import Home from "@/pages/Home";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { me } from "./api";
+import { homeLoader } from "./loaders";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Home,
-    loader: async () => {
-      const user = await me();
-      return user;
-    },
+    loader: homeLoader,
   },
   {
     path: "/login",
