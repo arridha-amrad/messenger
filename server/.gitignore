@@ -1,0 +1,5 @@
+node_modules
+build
+.eslintcache
+/generated/prisma
+.DS_Store
