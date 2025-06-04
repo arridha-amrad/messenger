@@ -13,6 +13,7 @@ import Stack from "@mui/material/Stack";
 import { FormEvent, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import EmojiPicker from "./EmojiPicker";
+import SocketEmit from "@/hooks/useSocket/callback/emit.callback";
 
 export default function CreateMessageForm() {
   const [text, setText] = useState<string>("");
@@ -50,9 +51,8 @@ export default function CreateMessageForm() {
     const audio = new Audio(SentAudio);
     const sentAt = new Date().toISOString();
     try {
-      const {
-        data: { message },
-      } = await sendMessageApi({
+      await audio.play();
+      await SocketEmit.sendMessage({
         sentAt,
         content: text,
         receiverIds: currChat.participants
@@ -62,37 +62,49 @@ export default function CreateMessageForm() {
         chatName: currChat.name ?? undefined,
         isGroup: currChat.isGroup,
       });
-      await audio.play();
-      dispatch(
-        updateCurrChat({
-          chatId: message.chatId,
-          content: message.content,
-          id: message.id,
-          sentAt: message.sentAt,
-          user: {
-            id: authUser.id,
-            imageURL: authUser.imageURL,
-            username: authUser.username,
-          },
-          reactions: [],
-          readers: [],
-        })
-      );
-      dispatch(
-        addNewMessage({
-          chatId: message.chatId,
-          content: message.content,
-          id: message.id,
-          sentAt: message.sentAt,
-          user: {
-            id: authUser.id,
-            imageURL: authUser.imageURL,
-            username: authUser.username,
-          },
-          reactions: [],
-          readers: [],
-        })
-      );
+      // const {
+      //   data: { message },
+      // } = await sendMessageApi({
+      //   sentAt,
+      //   content: text,
+      //   receiverIds: currChat.participants
+      //     .filter((p) => p.id !== authUser?.id)
+      //     .map((r) => r.id),
+      //   chatId: currChat.id,
+      //   chatName: currChat.name ?? undefined,
+      //   isGroup: currChat.isGroup,
+      // });
+      // await audio.play();
+      // dispatch(
+      //   updateCurrChat({
+      //     chatId: message.chatId,
+      //     content: message.content,
+      //     id: message.id,
+      //     sentAt: message.sentAt,
+      //     user: {
+      //       id: authUser.id,
+      //       imageURL: authUser.imageURL,
+      //       username: authUser.username,
+      //     },
+      //     reactions: [],
+      //     readers: [],
+      //   })
+      // );
+      // dispatch(
+      //   addNewMessage({
+      //     chatId: message.chatId,
+      //     content: message.content,
+      //     id: message.id,
+      //     sentAt: message.sentAt,
+      //     user: {
+      //       id: authUser.id,
+      //       imageURL: authUser.imageURL,
+      //       username: authUser.username,
+      //     },
+      //     reactions: [],
+      //     readers: [],
+      //   })
+      // );
       setText("");
     } catch (error) {
       console.log(error);

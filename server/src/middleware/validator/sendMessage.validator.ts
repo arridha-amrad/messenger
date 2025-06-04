@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
-import { z } from 'zod';
-import { formatZodErrors } from './helper.validator';
-import sanitizeHtml from "sanitize-html"
+import { NextFunction, Request, Response } from "express";
+import { z } from "zod";
+import { formatZodErrors } from "./helper.validator";
+import sanitizeHtml from "sanitize-html";
 
-export const schema = z.object({
-  content: z.string()
+export const sendMessageSchema = z.object({
+  content: z
+    .string()
     .transform((val) =>
       sanitizeHtml(val, { allowedTags: [], allowedAttributes: {} })
     ),
@@ -12,17 +13,17 @@ export const schema = z.object({
   chatId: z.number().nullable(),
   sentAt: z.string().transform((val) => new Date(val)),
   chatName: z.string().optional(),
-  isGroup: z.boolean().optional()
+  isGroup: z.boolean().optional(),
 });
 
-export type SendMessageInput = z.infer<typeof schema>;
+export type SendMessageInput = z.infer<typeof sendMessageSchema>;
 
 export const validateSendMessageInput = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
-  const validation = schema.safeParse(req.body);
+  const validation = sendMessageSchema.safeParse(req.body);
 
   if (!validation.success) {
     res.status(400).json({ errors: formatZodErrors(validation.error) });
@@ -32,5 +33,3 @@ export const validateSendMessageInput = (
   req.body = validation.data;
   next();
 };
-
-

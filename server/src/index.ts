@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import { createServer as serverInit } from "http";
 import { createServer } from "@/app";
-import { initSocket } from "@/lib/socket-io/init";
+import { initSocket } from "@/lib/socket-io/init.socket-io";
 import { connectDb } from "./lib/prisma";
 
 const port = 5000;

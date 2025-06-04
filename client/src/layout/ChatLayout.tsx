@@ -1,25 +1,31 @@
-import ModalCreateGroupChat from "@/components/ModalCreateNewChat";
 import RecentChats from "@/components/RecentChats";
-import TabBar from "@/components/TabBar";
 import useFetchUserChats from "@/hooks/useFetchUserChats";
 import { RootState } from "@/lib/redux/store";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import AuthenticatedUserCard from "./ChatLayout/AuthenticatedUserCard";
+import { useSocket } from "@/hooks/useSocket";
+import SocketEmit from "@/hooks/useSocket/callback/emit.callback";
 
 export default function ChatLayout() {
   const { user: authUser } = useSelector((state: RootState) => state.auth);
   const [chatError, setChatError] = useState("");
 
   const loadingChat = useFetchUserChats();
+
+  const { socket } = useSocket();
+
+  useEffect(() => {
+    if (socket && authUser) {
+      SocketEmit.addUser(authUser);
+    }
+  }, [socket?.id, authUser]);
 
   if (!authUser) return null;
 

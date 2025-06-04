@@ -29,6 +29,15 @@ export default class MessageRepo {
         userId,
         sentAt,
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            imageURL: true,
+            username: true,
+          },
+        },
+      },
     });
     return result;
   }

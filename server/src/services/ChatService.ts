@@ -1,3 +1,4 @@
+import { SendMessageInput } from "@/middleware/validator/sendMessage.validator";
 import ChatRepo from "@/repositories/ChatRepo";
 import LastSeenRepository from "@/repositories/LastSeenRepository";
 import MessageReactionRepository from "@/repositories/MessageReactionRepository";
@@ -12,6 +13,28 @@ export default class ChatService {
     private participantsRepo = new ParticipantRepo(),
     private msgReactRepo = new MessageReactionRepository()
   ) {}
+
+  async storeMessage(message: SendMessageInput, authUserId: number) {
+    let chatId = message.chatId;
+    if (!chatId) {
+      const newChat = await this.initChat({
+        isGroup: message.isGroup,
+        name: message.chatName,
+      });
+      chatId = newChat.id;
+      await this.addChatParticipants(chatId, [
+        ...message.receiverIds,
+        authUserId,
+      ]);
+    }
+    const newMessage = await this.saveMessage(
+      chatId,
+      message.content,
+      message.sentAt,
+      authUserId
+    );
+    return newMessage;
+  }
 
   async findLastSeenByUserId(id: number) {
     const lastSeen = await this.lastSeenRepo.findOne({ userId: id });
