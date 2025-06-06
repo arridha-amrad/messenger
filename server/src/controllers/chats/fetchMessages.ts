@@ -10,7 +10,7 @@ export const fetchMessages = async (
   const { chatId } = req.params;
 
   try {
-    const messages = await chatService.fetchMessagesByChatId(Number(chatId));
+    const messages = await chatService.fetchMessagesByChatId(chatId);
     res.status(200).json({ messages });
     return;
   } catch (err) {

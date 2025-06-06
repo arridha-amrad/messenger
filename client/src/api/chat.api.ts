@@ -1,4 +1,5 @@
 import { privateAxios } from "@/lib/axios";
+import { TChat } from "@/lib/redux/chatSlice";
 import { TSendMessage } from "@/validators/chat";
 
 export type TSendMessageResultFromApi = {
@@ -9,40 +10,22 @@ export type TSendMessageResultFromApi = {
   chatId: number;
 };
 
-export type TFetchChatFromApi = {
-  id: number;
-  name: string | null;
-  isGroup: boolean;
-  participants: {
-    id: number;
-    username: string;
-    imageURL: string | null;
-  }[];
-  message: {
-    content: string;
-    date: Date;
-  };
-};
-
 export const fetchChatsApi = async () => {
-  const response = await privateAxios.get<{ chats: TFetchChatFromApi[] }>(
-    "/chats"
-  );
+  const response = await privateAxios.get<{ chats: TChat[] }>("/chats");
   return response;
 };
 
-export type TMessageReaction =
-  {
-    id: number;
-    value: string;
-    users: [
-      {
-        id: number;
-        username: string;
-        imageURL: string | null;
-      }
-    ];
-  }
+export type TMessageReaction = {
+  id: number;
+  value: string;
+  users: [
+    {
+      id: number;
+      username: string;
+      imageURL: string | null;
+    }
+  ];
+};
 
 export type TFetchMessageFromApi = {
   id: number;
@@ -64,7 +47,7 @@ export type TFetchMessageFromApi = {
   reactions: TMessageReaction[];
 };
 
-export const fetchChatMessagesApi = async (chatId: number) => {
+export const fetchChatMessagesApi = async (chatId: string) => {
   return privateAxios.get<{ messages: TFetchMessageFromApi[] }>(
     `/chats/messages/${chatId}`
   );

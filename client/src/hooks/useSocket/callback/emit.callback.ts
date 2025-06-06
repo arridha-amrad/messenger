@@ -1,6 +1,5 @@
-import { TUser } from "@/lib/redux/authSlice";
-import { MySocket } from "..";
 import { TSendMessage } from "@/validators/chat";
+import { MySocket, TSocketAddUser } from "..";
 
 export default class SocketEmit {
   private static socket: MySocket | null = null;
@@ -8,8 +7,8 @@ export default class SocketEmit {
   static init(socketInstance: MySocket) {
     this.socket = socketInstance;
   }
-  static async addUser(user: TUser) {
-    this.socket?.emit("user:add", user);
+  static async addUser(chats: TSocketAddUser[]) {
+    this.socket?.emit("user:add", chats);
   }
   static async sendMessage(message: TSendMessage) {
     this.socket?.emit("message:send", message);

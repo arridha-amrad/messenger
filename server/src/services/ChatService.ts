@@ -16,12 +16,15 @@ export default class ChatService {
 
   async storeMessage(message: SendMessageInput, authUserId: number) {
     let chatId = message.chatId;
-    if (!chatId) {
-      const newChat = await this.initChat({
+    const isChatExist = await this.chatRepo.findOne({
+      id: chatId,
+    });
+    if (!isChatExist) {
+      await this.initChat({
         isGroup: message.isGroup,
         name: message.chatName,
+        id: chatId,
       });
-      chatId = newChat.id;
       await this.addChatParticipants(chatId, [
         ...message.receiverIds,
         authUserId,
@@ -108,32 +111,40 @@ export default class ChatService {
     return chats;
   }
 
-  async fetchMessagesByChatId(id: number) {
-    const messages = await this.messageRepo.findMany(id);
+  async fetchMessagesByChatId(id: string) {
+    const messages = await this.messageRepo.findMany({ chatId: id });
     return messages;
   }
 
-  async initChat({ isGroup, name }: { name?: string; isGroup?: boolean }) {
-    const newChat = await this.chatRepo.create({ isGroup, name });
+  async initChat({
+    isGroup,
+    name,
+    id,
+  }: {
+    id: string;
+    name?: string;
+    isGroup?: boolean;
+  }) {
+    const newChat = await this.chatRepo.create({ isGroup, name, id });
     return newChat;
   }
 
-  async addChatParticipants(chatId: number, userIds: number[]) {
+  async addChatParticipants(chatId: string, userIds: number[]) {
     const participants = await this.participantsRepo.create(chatId, userIds);
     return participants;
   }
 
   async saveMessage(
-    chatId: number,
+    chatId: string,
     content: string,
     sentAt: Date,
     userId: number
   ) {
     const newMessage = await this.messageRepo.createOne({
-      chatId,
+      chat: { connect: { id: chatId } },
       content,
       sentAt,
-      userId,
+      user: { connect: { id: userId } },
     });
     return newMessage;
   }

@@ -1,3 +1,8 @@
+import { env } from "@/env";
+import { SendMessageInput } from "@/middleware/validator/sendMessage.validator";
+import RedisRepository from "@/repositories/RedisRepo";
+import ChatService from "@/services/ChatService";
+import TokenService from "@/services/TokenService";
 import { IncomingMessage, Server, ServerResponse } from "http";
 import { Server as SocketIOServer } from "socket.io";
 import {
@@ -6,16 +11,8 @@ import {
   MySocket,
   ServerToClientEvents,
   SocketData,
-  SocketUser,
   StoredSocketUser,
 } from "./types";
-import { formatDistanceToNowStrict } from "date-fns";
-import ChatService from "@/services/ChatService";
-import { env } from "@/env";
-import TokenService from "@/services/TokenService";
-import UserService from "@/services/UserService";
-import RedisRepository from "@/repositories/RedisRepo";
-import { SendMessageInput } from "@/middleware/validator/sendMessage.validator";
 
 let users: StoredSocketUser[] = [];
 
@@ -23,25 +20,8 @@ interface UserPresence {
   userId: number;
   socketId: string;
   lastActive: Date;
+  rooms: Set<string>;
 }
-
-const addNewUserSocket = (data: StoredSocketUser): void => {
-  const index = users.findIndex((user) => user.id === data.id);
-  if (index >= 0) {
-    users[index].socketId = data.socketId;
-  } else {
-    users.push(data);
-  }
-};
-
-const getUserSocketIdByUserId = (userId: number) => {
-  const user = users.find((u) => u.id === userId);
-  return user?.socketId;
-};
-
-const removeUser = (socketId: string): void => {
-  users = users.filter((user) => user.socketId !== socketId);
-};
 
 const registerChatEvent = async (socket: MySocket) => {
   const authUserId = socket.data.user.id;
@@ -72,20 +52,24 @@ const registerPresenceEvent = async (socket: MySocket) => {
     userId,
     socketId: socket.id,
     lastActive: new Date(),
+    rooms: new Set(),
   };
 
-  const heartbeatInterval = setInterval(() => {
-    userPresence.lastActive = new Date();
-    // Optional: Store in Redis for cross-server sync
-    redis.createOne(`userId:${userId}`, JSON.stringify(userPresence));
-  }, 30000); // 30 seconds
+  // const heartbeatInterval = setInterval(() => {
+  //   userPresence.lastActive = new Date();
+  //   // Optional: Store in Redis for cross-server sync
+  //   redis.createOne(`userId:${userId}`, JSON.stringify(userPresence));
+  // }, 30000); // 30 seconds
 
-  socket.on("user:add", async (user) => {
-    await redis.createOne(`userId:${userId}`, JSON.stringify(userPresence));
+  socket.on("user:add", async (chats) => {
+    const rooms = chats.map((c) => c.id);
+    userPresence.rooms = new Set(rooms);
+    socket.join(rooms);
+    await redis.createOne(`userId:${userId}`, userPresence);
   });
 
   socket.on("disconnect", async () => {
-    clearInterval(heartbeatInterval);
+    // clearInterval(heartbeatInterval);
     await redis.deleteOne(`userId:${userId}`);
   });
 };

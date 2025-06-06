@@ -4,8 +4,14 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import UserChatCard from "./UserChatCard";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
-export default function RecentChats() {
+type Props = {
+  isLoading: boolean;
+};
+
+export default function RecentChats({ isLoading }: Props) {
   const { chats } = useSelector((state: RootState) => state.chat);
 
   return (
@@ -15,9 +21,18 @@ export default function RecentChats() {
           Recent chats
         </Typography>
       </Divider>
-      {chats.map((chat, i) => (
-        <UserChatCard chat={chat} key={i} />
-      ))}
+      {isLoading ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          paddingTop="0.5rem"
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        chats.map((chat, i) => <UserChatCard chat={chat} key={i} />)
+      )}
     </Stack>
   );
 }

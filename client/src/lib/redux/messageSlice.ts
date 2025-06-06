@@ -1,11 +1,46 @@
-import { TFetchMessageFromApi } from "@/api/chat.api";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { TUser } from "./authSlice";
-import { StatementSync } from "node:sqlite";
+
+export type TMessageReaction = {
+  id: number;
+  value: string;
+  users: [
+    {
+      id: number;
+      username: string;
+      imageURL: string | null;
+    }
+  ];
+};
+
+export type TMessage = {
+  id: number;
+  content: string;
+  sentAt: Date;
+  chat: {
+    id: string;
+    name: string | null;
+    isGroup: boolean;
+    createdAt: Date;
+  };
+  user: {
+    id: number;
+    username: string;
+    imageURL: string | null;
+  };
+  readers: {
+    id: number;
+    username: string;
+    email: string;
+    imageURL: string | null;
+    createdAt: Date;
+  }[];
+  reactions: TMessageReaction[];
+};
 
 export interface MessageState {
-  messages: TFetchMessageFromApi[];
+  messages: TMessage[];
   justReadMessageIds: number[];
 }
 
@@ -18,10 +53,10 @@ export const messageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
-    setMessages: (state, action: PayloadAction<TFetchMessageFromApi[]>) => {
+    setMessages: (state, action: PayloadAction<TMessage[]>) => {
       state.messages = action.payload;
     },
-    addNewMessage: (state, action: PayloadAction<TFetchMessageFromApi>) => {
+    addNewMessage: (state, action: PayloadAction<TMessage>) => {
       state.messages.push(action.payload);
     },
     addJustReadMessageIds: (state, action: PayloadAction<number>) => {

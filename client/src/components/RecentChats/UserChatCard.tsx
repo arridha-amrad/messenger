@@ -7,39 +7,38 @@ import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   chat: TChat;
 };
 
 export default function Chat({ chat }: Props) {
-  const { currChat } = useSelector((state: RootState) => state.chat);
   const { user: authUser } = useSelector((state: RootState) => state.auth);
+  const { currChat } = useSelector((state: RootState) => state.chat);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const clock = formatClock(chat.message.date ?? new Date());
-  const [params] = useSearchParams();
-
-  // useEffect(() => {
-  //   if (chatId && chat.chatId === chatId) {
-  //     socket?.emit("setChat", chat.userId, user?.id);
-  //     dispatch(setCurrChat(chat));
-  //   }
-  // }, [chatId]);
+  const clock = formatClock(chat.message?.sentAt ?? new Date());
 
   const setChat = async () => {
     dispatch(setCurrChat(chat));
-    navigate("/chat");
+    navigate(`/chat?id=${chat.id}`);
   };
 
   return (
-    <Card>
+    <Card sx={{ borderRadius: 0 }}>
       <CardActionArea
+        data-active={currChat?.id === chat.id ? "" : undefined}
         onClick={setChat}
         sx={{
           px: 2,
           py: 1,
+          "&[data-active]": {
+            backgroundColor: "action.selected",
+            "&:hover": {
+              backgroundColor: "action.selectedHover",
+            },
+          },
         }}
       >
         <Stack width="100%" gap={2} alignItems="center" direction={"row"}>
@@ -76,7 +75,7 @@ export default function Chat({ chat }: Props) {
               }}
               color="textSecondary"
             >
-              {chat.message.content}
+              {chat.message?.content}
             </Typography>
           </Stack>
           <Stack gap={2} direction={"column"}>

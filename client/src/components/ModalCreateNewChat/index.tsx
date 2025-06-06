@@ -1,6 +1,6 @@
 import { TSearchUserResultFromApi } from "@/api/user.api";
 import useSearchUser from "@/hooks/useSearchUser";
-import { initNewChat } from "@/lib/redux/chatSlice";
+import { initNewChat, TInitNewChat } from "@/lib/redux/chatSlice";
 import { RootState } from "@/lib/redux/store";
 import CloseIcon from "@mui/icons-material/Close";
 import CreateIcon from "@mui/icons-material/Create";
@@ -19,6 +19,8 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchUserResult from "./SearchUserResult";
+import { createId } from "@paralleldrive/cuid2";
+import { saveInitChatToLocalStorage } from "@/utils";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -47,12 +49,15 @@ export default function ModalCreateNewChat() {
 
   const initChat = () => {
     if (!authUser) return;
-    dispatch(
-      initNewChat({
-        isGroup: selectedUsers.length > 1,
-        users: [...selectedUsers, authUser],
-      })
-    );
+    const id = createId();
+    const newChatData: TInitNewChat = {
+      id,
+      name: "",
+      isGroup: selectedUsers.length > 1,
+      users: [...selectedUsers, authUser],
+    };
+    saveInitChatToLocalStorage(newChatData);
+    dispatch(initNewChat(newChatData));
     handleClose();
   };
 

@@ -1,8 +1,12 @@
 import redis from "@/lib/redis";
 
 export default class RedisRepository {
-  async createOne(key: string, value: string) {
-    return redis.set(key, value);
+  async createOne<T extends object>(key: string, value: T, maxAge?: number) {
+    return redis
+      .multi()
+      .hset(key, value)
+      .expire(key, maxAge ?? 86400)
+      .exec();
   }
 
   async findOne(key: string) {

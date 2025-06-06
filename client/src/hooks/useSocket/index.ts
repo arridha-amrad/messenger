@@ -1,32 +1,14 @@
 import { getAccessToken } from "@/lib/axios";
 import { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { io, Socket } from "socket.io-client";
-
-import { TUser } from "@/lib/redux/authSlice";
+import ReceiveSound from "@/assets/receive.mp3";
+import { TChat, updateCurrChat } from "@/lib/redux/chatSlice";
+import { addNewMessage, TMessage } from "@/lib/redux/messageSlice";
 import { TSendMessage } from "@/validators/chat";
 import SocketEmit from "./callback/emit.callback";
 import SocketListeningCallback from "./callback/listening.callback";
-import { TFetchMessageFromApi } from "@/api/chat.api";
-import ReceiveSound from "@/assets/receive.mp3";
-import { updateCurrChat } from "@/lib/redux/chatSlice";
-import { addNewMessage } from "@/lib/redux/messageSlice";
-
-const transformMessage = ({
-  chatId,
-  content,
-  id,
-  sentAt,
-  user,
-}: ReceiveMessage): TFetchMessageFromApi => ({
-  chatId,
-  content,
-  id,
-  sentAt,
-  reactions: [],
-  readers: [],
-  user,
-});
+import { RootState } from "@/lib/redux/store";
 
 export type ReceiveMessage = {
   user: {
@@ -44,11 +26,12 @@ export type ReceiveMessage = {
 
 type SocketEvent = {
   connect: () => void;
-  "message:receive": (message: ReceiveMessage) => Promise<void>;
+  "message:receive": (message: TMessage) => Promise<void>;
 };
 
+export type TSocketAddUser = Pick<TChat, "id" | "isGroup" | "name">;
 type SocketEmitEvent = {
-  "user:add": (user: TUser) => void;
+  "user:add": (user: TSocketAddUser[]) => void;
   "message:send": (message: TSendMessage) => void;
 };
 
@@ -56,6 +39,7 @@ export type MySocket = Socket<SocketEvent, SocketEmitEvent>;
 
 export const useSocket = () => {
   const dispatch = useDispatch();
+  const { user: authUser } = useSelector((state: RootState) => state.auth);
   const cb = new SocketListeningCallback(dispatch);
 
   const accessToken = getAccessToken();
@@ -63,7 +47,7 @@ export const useSocket = () => {
   const socketRef = useRef<MySocket | null>(null);
 
   useEffect(() => {
-    if (!accessToken) return;
+    if (!accessToken || !authUser) return;
     const socket: MySocket = io(`${import.meta.env.VITE_SERVER_URL}/user`, {
       reconnectionAttempts: 3,
       reconnectionDelay: 1000,
@@ -77,26 +61,25 @@ export const useSocket = () => {
 
     SocketEmit.init(socket);
 
-    // Connection handlers
     socket.on("connect", () => {
       console.log("Socket connected:", socket.id);
     });
 
     socket.on("connect_error", (err) => {
       console.error("Connection error:", err.message);
-      if (err.message.includes("auth")) {
-        // Handle token expiration
-      }
     });
 
-    const handleReceiveMessage = async (message: ReceiveMessage) => {
+    const handleReceiveMessage = async (message: TMessage) => {
       console.log("received message : ", message);
-
       try {
         const audio = new Audio(ReceiveSound);
-        await audio.play().catch((e) => console.warn("Audio play failed:", e));
-        dispatch(addNewMessage(transformMessage(message)));
-        dispatch(updateCurrChat(transformMessage(message)));
+        if (message.user.id !== authUser.id) {
+          await audio
+            .play()
+            .catch((e) => console.warn("Audio play failed:", e));
+        }
+        dispatch(addNewMessage(message));
+        dispatch(updateCurrChat(message));
       } catch (err) {
         console.error("Message handling error:", err);
       }
@@ -107,7 +90,7 @@ export const useSocket = () => {
     return () => {
       socket.disconnect();
     };
-  }, [dispatch]);
+  }, [dispatch, authUser]);
 
   return {
     socket: socketRef.current,

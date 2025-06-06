@@ -28,13 +28,13 @@ type TMessageSend = {
 export interface ClientToServerEvents {
   "message:send": (message: SendMessageInput) => void;
   hello: () => void;
-  "user:add": (user: {
-    id: number;
-    username: string;
-    email: string;
-    imageURL: string | null;
-    createdAt: Date;
-  }) => void;
+  "user:add": (
+    chats: {
+      isGroup: boolean;
+      id: string;
+      name: string | null;
+    }[]
+  ) => void;
   setChat: (receiverIds: number[], senderId: number, isGroup: boolean) => void;
   typing: (receiverIds: number[], senderId: number) => void;
   noTyping: (receiverIds: number[], senderId: number) => void;

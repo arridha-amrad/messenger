@@ -10,7 +10,7 @@ export const sendMessageSchema = z.object({
       sanitizeHtml(val, { allowedTags: [], allowedAttributes: {} })
     ),
   receiverIds: z.number().array(),
-  chatId: z.number().nullable(),
+  chatId: z.string(),
   sentAt: z.string().transform((val) => new Date(val)),
   chatName: z.string().optional(),
   isGroup: z.boolean().optional(),

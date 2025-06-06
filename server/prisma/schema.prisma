@@ -39,7 +39,7 @@ model Token {
 }
 
 model Chat {
-  id           Int           @id @default(autoincrement())
+  id           String        @id
   name         String?
   isGroup      Boolean       @default(false)
   createdAt    DateTime      @default(now())
@@ -53,7 +53,7 @@ model Message {
   id        Int               @id @default(autoincrement())
   content   String
   sentAt    DateTime          @default(now())
-  chatId    Int
+  chatId    String
   userId    Int
   chat      Chat              @relation(fields: [chatId], references: [id], onDelete: Cascade)
   user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -90,11 +90,11 @@ model MessageReaction {
 }
 
 model Participant {
-  id     Int  @id @default(autoincrement())
-  chatId Int
+  id     Int    @id @default(autoincrement())
+  chatId String
   userId Int
-  chat   Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("participants")
 }

@@ -1,11 +1,5 @@
 import { prisma } from "@/lib/prisma";
-
-type TCreate = {
-  content: string;
-  chatId: number;
-  userId: number;
-  sentAt: Date;
-};
+import { Prisma } from "@prisma/client";
 
 type TReaction = {
   id: number;
@@ -20,100 +14,97 @@ type TReaction = {
   ];
 };
 
-export default class MessageRepo {
-  async createOne({ chatId, content, sentAt, userId }: TCreate) {
-    const result = await prisma.message.create({
-      data: {
-        content,
-        chatId,
-        userId,
-        sentAt,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            imageURL: true,
-            username: true,
-          },
+const include = {
+  chat: {
+    select: {
+      id: true,
+      name: true,
+      isGroup: true,
+      createdAt: true,
+    },
+  },
+  user: {
+    select: {
+      id: true,
+      username: true,
+      imageURL: true,
+    },
+  },
+  reactions: {
+    include: {
+      user: {
+        select: {
+          id: true,
+          username: true,
+          imageURL: true,
         },
       },
+    },
+  },
+  readers: {
+    include: {
+      reader: {
+        select: {
+          id: true,
+          username: true,
+          imageURL: true,
+          email: true,
+          createdAt: true,
+        },
+      },
+    },
+  },
+};
+
+type QueryResult = Prisma.MessageGetPayload<{
+  include: typeof include;
+}>;
+
+export default class MessageRepo {
+  async createOne(data: Prisma.MessageCreateInput) {
+    const result = await prisma.message.create({
+      data,
+      include,
     });
-    return result;
+    return this.normalizeMessage(result);
   }
 
-  async findMany(chatId: number) {
+  async findMany(where?: Prisma.MessageWhereInput) {
     const result = await prisma.message.findMany({
-      where: {
-        chatId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            username: true,
-            imageURL: true,
-          },
-        },
-        reactions: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                username: true,
-                imageURL: true,
-              },
-            },
-          },
-        },
-        readers: {
-          include: {
-            reader: {
-              select: {
-                id: true,
-                username: true,
-                imageURL: true,
-                email: true,
-                createdAt: true,
-              },
-            },
-          },
-        },
-      },
+      where,
+      include,
     });
-    const messages = result.map((data) => {
-      const reactions = data.reactions.reduce((prev, curr) => {
-        const reaction = prev.find((v) => v.unified === curr.unified);
-        if (!reaction) {
-          prev.push({
-            ...curr,
-            users: [curr.user],
-          });
-        } else {
-          reaction.users.push(curr.user);
-        }
-        return prev;
-      }, [] as TReaction[]);
-      return {
-        id: data.id,
-        chatId: data.chatId,
-        content: data.content,
-        sentAt: data.sentAt,
-        user: {
-          id: data.user.id,
-          username: data.user.username,
-          imageURL: data.user.imageURL,
-        },
-        readers: data.readers.map((r) => ({
-          ...r.reader,
-        })),
-        reactions,
-      };
-    });
+    const messages = result.map((data) => this.normalizeMessage(data));
     return messages;
   }
 
   async deleteOne(id: number) {
     await prisma.message.delete({ where: { id } });
+  }
+
+  private normalizeMessage(message: QueryResult) {
+    const reactions = message.reactions.reduce((prev, curr) => {
+      const reaction = prev.find((v) => v.unified === curr.unified);
+      if (!reaction) {
+        prev.push({
+          ...curr,
+          users: [curr.user],
+        });
+      } else {
+        reaction.users.push(curr.user);
+      }
+      return prev;
+    }, [] as TReaction[]);
+    return {
+      id: message.id,
+      chatId: message.chatId,
+      content: message.content,
+      sentAt: message.sentAt,
+      user: message.user,
+      readers: message.readers.map((r) => ({
+        ...r.reader,
+      })),
+      reactions,
+    };
   }
 }
